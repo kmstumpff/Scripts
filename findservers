@@ -1,0 +1,130 @@
+#!/bin/sh
+########################################################
+# This script was made to tell the user if the local
+# Seapine servers are running. Copy this script to
+# /usr/bin so it can be run from any working directory.
+# The pidof... functions are reused from the spls 
+# script. If the server process is found, it outputs
+# a message and the pid of the process.
+
+########################################################
+# function to find the pid the license server
+
+pidofspls() {
+
+    ps -ef > /tmp/ps.tbl 2> /dev/null
+    pid=`awk -F" " '/\/splicsvr/ {print $2}' /tmp/ps.tbl`
+	rm -rf /tmp/ps.tbl > /dev/null 2>&1
+    if [ "$pid" != "" ]
+    then 
+        echo $pid
+        return 0 
+    fi
+}
+
+######################################################## 
+# function to find the pid of the surround server
+
+pidofsurroundscm() {
+
+    ps -ef > /tmp/ps.tbl 2> /dev/null
+    pid=`awk -F" " '/\/scmserver/ {print $2}' /tmp/ps.tbl`
+	rm -rf /tmp/ps.tbl > /dev/null 2>&1
+    if [ "$pid" != "" ]
+    then 
+        echo $pid
+        return 0 
+    fi
+}
+
+# function to find the pid of the surround proxy server
+
+pidofsurroundscmproxy() {
+
+    ps -ef > /tmp/ps.tbl 2> /dev/null
+    pid=`awk -F" " '/\/scmproxyserver/ {print $2}' /tmp/ps.tbl`
+	rm -rf /tmp/ps.tbl > /dev/null 2>&1
+    if [ "$pid" != "" ]
+    then 
+        echo $pid
+        return 0 
+    fi
+}
+
+
+########################################################
+# function to find the pid of the testtrack server
+
+pidofttstudio() {
+
+    ps -ef > /tmp/ps.tbl 2> /dev/null
+    pid=`awk -F" " '/\/ttserver/ {print $2}' /tmp/ps.tbl`
+	rm -rf /tmp/ps.tbl > /dev/null 2>&1
+    if [ "$pid" != "" ]
+    then 
+        echo $pid
+        return 0 
+    fi
+}
+
+########################################################
+# Use functions to set environment variables
+
+pidls=`pidofspls $1`
+pidss=`pidofsurroundscm $1`
+pidsp=`pidofsurroundscmproxy $1`
+pidtt=`pidofttstudio $1`
+
+########################################################
+# Output the results
+
+echo ""
+
+########################################################
+# License Server
+
+if [ "$pidls" != "" ]
+then
+    echo "The License Server is running!"
+    echo "The pid of spls is: $pidls"
+else
+    echo "The License Server is not running!"
+fi
+
+echo ""
+
+########################################################
+# Surround Server
+
+if [ "$pidss" != "" ]
+then
+    echo "The Surround server is running!"
+    echo "The pid of surroundscm is: $pidss"
+else
+    echo "The Surround server is not running!"
+fi
+echo ""
+
+########################################################
+# Surround Proxy Server
+
+if [ "$pidsp" != "" ]
+then
+    echo "The Surround proxy server is running!"
+    echo "The pid of surroundscmproxy is: $pidss"
+else
+    echo "The Surround proxy server is not running!"
+fi
+echo ""
+
+########################################################
+# TestTrack Server
+
+if [ "$pidtt" != "" ]
+then
+    echo "The TestTrack server is running!"
+    echo "The pid of ttstudio is: $pidtt"
+else
+    echo "The TestTrack server is not running!"
+fi
+echo ""
