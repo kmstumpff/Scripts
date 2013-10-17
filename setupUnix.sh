@@ -8,15 +8,21 @@ then
 	exit 1
 fi 
 
-echo "Determining the distribution you are using" 
-#Determine the OS:
-distro=$(head -1 /etc/issue | awk '{print $1}')
 
-echo "Do you want to install findservers? [y/n]"
+osname=$(uname -s)
+
+if [ "$osname" = "Linux" ]
+then
+	#Determine the distro of Linux:
+	echo "Determining the distribution you are using" 
+	distro=$(head -1 /etc/issue | awk '{print $1}')
+fi
+
+printf "Do you want to install findservers? [y/n]: "
 	read fs_answer
 	if [ "$fs_answer" = "y" ] || [ "$fs_answer" = "Y" ]
 	then
-		#add the find server script to "/usr/bin"
+		#Creates script at "/usr/bin/fs to display which Seapine servers are running"
 		touch /usr/bin/fs
 		> /usr/bin/fs
 		echo "#!/bin/sh" >> /usr/bin/fs
@@ -121,9 +127,9 @@ echo "Do you want to install findservers? [y/n]"
 	fi
 
 
-echo "Do you want to add aliases? [y/n]"
-read fs_answer
-if [ "$fs_answer" = "y" ] || [ "$fs_answer" = "Y" ]
+printf "Do you want to add aliases? [y/n]: "
+read al_answer
+if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
 then
 	if [ "$distro" = "Ubuntu" ]
 	then
@@ -141,9 +147,9 @@ then
 		echo "alias spstart='spls start;surroundscm start'" >> /home/seapine/.bashrc
 		echo "alias spstop='spls stop;surroundscm stop'" >> /home/seapine/.bashrc
 		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /home/seapine/.bashrc
-		echo "alias devfiles='smbclient \\\\devfiles\\QA -Useapine\\stumpffk'"  >> /home/seapine/.bashrc
-		echo "alias qa='smbclient \\\\devfiles\\QA -Useapine\\stumpffk'"  >> /home/seapine/.bashrc
-		echo "alias camelot='smbclient \\\\camelot\\UpcomingReleases -Useapine\\stumpffk'"  >> /home/seapine/.bashrc
+		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /home/seapine/.bashrc
+		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /home/seapine/.bashrc
+		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\stumpffk'"  >> /home/seapine/.bashrc
 		
 		#/root/.bashrc
 		echo "alias la='ls -lah'" >> /root/.bashrc
@@ -157,9 +163,9 @@ then
 		echo "alias spstart='spls start;surroundscm start'" >> /root/.bashrc
 		echo "alias spstop='spls stop;surroundscm stop'" >> /root/.bashrc
 		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /root/.bashrc	
-		echo "alias devfiles='smbclient \\\\devfiles\\QA -Useapine\\stumpffk'"  >> /root/.bashrc
-		echo "alias qa='smbclient \\\\devfiles\\QA -Useapine\\stumpffk'"  >> /root/.bashrc
-		echo "alias camelot='smbclient \\\\camelot\\UpcomingReleases -Useapine\\stumpffk'"  >> /root/.bashrc
+		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /root/.bashrc
+		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /root/.bashrc
+		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\stumpffk'"  >> /root/.bashrc
 		
 	else
 		#appending aliases to "/etc/bashrc"
@@ -174,13 +180,13 @@ then
 		echo "alias spstart='spls start;surroundscm start'" >> /etc/bashrc
 		echo "alias spstop='spls stop;surroundscm stop'" >> /etc/bashrc
 		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /etc/bashrc
-		echo "alias devfiles='smbclient \\\\devfiles\\QA -Useapine\\stumpffk'"  >> /etc/bashrc
-		echo "alias qa='smbclient \\\\devfiles\\QA -Useapine\\stumpffk'"  >> /etc/bashrc
-		echo "alias camelot='smbclient \\\\camelot\\UpcomingReleases -Useapine\\stumpffk'"  >> /etc/bashrc
+		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /etc/bashrc
+		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /etc/bashrc
+		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\stumpffk'"  >> /etc/bashrc
 	fi
 fi
-osname=$(uname -s)
 
+	
 #########################################
 #OS X
 
@@ -190,76 +196,99 @@ then
 	echo "alias lsadmin='/Applications/Seapine\ License\ Server/Seapine\ License\ Server\ Admin\ Utility.app/Contents/MacOS/Seapine\ License\ Server\ Admin'" >> /etc/bashrc
 	echo "alias scmgui='/Applications/Surround\ SCM/Surround\ SCM\ Client.app/Contents/MacOS/Surround\ SCM'" >> /etc/bashrc
 	
-	#Download Surround
-	echo "Do you want to download Surround to the Desktop? [y/n]"
+	
+	#Install Homebrew and a few cli programs
+	printf "Do you want to install homebrew? [y/n]: "
 	read answer
 	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
 	then
-		echo "Enter the release version [i.e. 2013.2.0]"
+		echo "Installing Homebrew"
+		sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+		printf "Did homebrew install correctly? [y/n]: "
+		read answer
+		if [ "$answer" = "n" ] || [ "$answer" = "N" ]
+		then
+			printf "Make sure Xcode stuff installs correctly then hit any key to try again: "
+			read -s -n 1
+			sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+		fi
+		sudo -u seapine brew doctor
+		sudo -u seapine brew install wget
+		sudo -u seapine brew install emacs
+	fi
+	
+	#Download Surround
+	printf "Do you want to download Surround to the Desktop? [y/n]: "
+	read answer
+	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
+	then
+		echo "Enter the release version [i.e. 2014.0.0]"
 		read release
 		echo "Enter the build number [i.e. 1]"
 		read buildnum
 		export build="build$buildnum"
-		echo "Enter username"
-		read username
-		echo "Enter password"
-		read -s password
 		echo "Downloading Surround SCM $release $build"
 		mkdir tempdir
 		mkdir /Users/seapine/Desktop/$build
-		mount_smbfs //$username:$password@camelot/UpcomingReleases/SCM/$release/$build tempdir
+		mount_smbfs //camelot/UpcomingReleases/SCM/$release/$build tempdir
 		#clear password
 		export password=""
-		cp tempdir/sscmmacosxinstall.dgm.gz /Users/seapine/Desktop/$build
+		cp tempdir/sscmmacosxinstall.dmg.gz /Users/seapine/Desktop/$build
 		umount tempdir
 		rmdir tempdir
 		echo "Extracting sscmmacosxinstall.dgm.gz"
-		gzip -cd /Users/seapine/Desktop/$build/sscmmacosxinstall.dgm.gz
+		gzip -d /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg.gz
+		chmod seapine:staff /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg.gz
 	fi
 	
-	#Installing Graphics Driver
-	echo "Do you want to install the VMWare graphics driver? [y/n]"
+	#Installing VMWare Graphics Driver
+	printf "Do you want to install the VMWare graphics driver? [y/n]: "
 	read answer
 	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
 	then
 		echo "Downloading graphics driver..."
 		mkdir tempdir
-		mount_smbfs //stumpffk@excalibur/os/osx/VMWare%20Drivers tempdir
-		cp tempdir/VMsvga2_v1.2.4_OS_10.6-7.pkg /Users/seapine/Desktop
+		mount_smbfs //devfiles/QA/KyleS/VM_Files/MacGraphicsDriver tempdir
+		cp tempdir/VMsvga2_v1.2.5_OS_10.6-10.8.pkg /Users/seapine/Desktop
+		sleep 5
 		umount tempdir
 		rmdir tempdir
 		echo "Installing graphics driver..."
-		open /Users/seapine/Desktop/VMsvga2_v1.2.4_OS_10.6-7.pkg
+		open /Users/seapine/Desktop/VMsvga2_v1.2.5_OS_10.6-10.8.pkg
 	fi
-	#if user did not install driver
-	#quitting Mac terminal to apply aliases
-	echo "Are you sure you want to close all open terminal windows? [y/n]"
-	read answer
-	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
+	#if user did not install driver AND installed aliases,
+	#quit Mac terminal to apply aliases
+	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
 	then
-		killall Terminal
+		echo "Are you sure you want to close all open terminal windows? [y/n]"
+		read answer
+		if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
+		then
+			killall Terminal
+		fi
 	fi
 	
 #########################################
 #Linux
 else
 	#Download Surround
-	echo "Do you want to download Surround to the Desktop? [y/n]"
-	read answer
-	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
+	printf "Do you want to download Surround to the Desktop? [y/n]: "
+	read dl_answer
+	if [ "$dl_answer" = "y" ] || [ "$dl_answer" = "Y" ]
 	then
-		echo "Enter the release version [2013.2.0]"
+		printf "Enter the release version [2013.2.0]: "
 		read release
 		release=${release:-2013.2.0}
-		echo "Enter the build number [19]"
+		printf "Enter the build number [20]: "
 		read buildnum
-		buildnum=${buildnum:-19}
+		buildnum=${buildnum:-20}
 		export build="build$buildnum"
-		echo "Enter username [stumpffk]"
+		printf "Enter username [stumpffk]: "
 		read username
 		username=${username:-stumpffk}
-		echo "Enter password"
+		printf "Enter password: "
 		read -s password
+		echo ""
 		echo "Downloading Surround SCM $release $build"
 		mkdir .tempdir
 		mkdir /home/seapine/Desktop/$build
@@ -270,15 +299,35 @@ else
 		umount .tempdir
 		rmdir .tempdir
 		echo "Extracting sscmlinuxinstall.tar.gz"
-		tar -xf /home/seapine/Desktop/$build/sscmlinuxinstall.tar.gz /home/seapine/Desktop/$build
+		tar -xf /home/seapine/Desktop/$build/sscmlinuxinstall.tar.gz -C /home/seapine/Desktop/$build
 		chown seapine /home/seapine/Desktop/$build
 		chgrp seapine /home/seapine/Desktop/$build
+		echo "SCM install directory: /home/seapine/Desktop/$build"
 	fi
-	#quitting Linux terminal to apply aliases
-	echo "Are you sure you want to close all open terminal windows? [y/n]"
-	read answer
-	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
+	echo ""
+	echo "***** setup1.6.sh is now obsolete. *****"
+	printf "Do you still want to run setup1.6.sh? [n]: "
+	read ans_setup
+	ans_setup=${ans_setup:-n}
+	if [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
 	then
-		killall gnome-terminal
+		bash setup1.6.sh
 	fi
+	# If aliases were added and the setup script was ran,
+	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ] || [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
+	then
+		#quit Linux terminal to apply aliases
+		printf "Are you sure you want to close all open terminal windows? [y/n]: "
+		read answer
+		if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
+		then
+			if [ "$distro" = "Fedora" ]
+			then
+				killall Konsole
+			else
+				killall gnome-terminal
+			fi
+		fi
+	fi
+echo "Finished!"
 fi
