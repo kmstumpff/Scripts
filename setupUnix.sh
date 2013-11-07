@@ -1,5 +1,52 @@
 #!/bin/bash
-#
+#********************************************************************
+#**********************************************************************
+# Description:
+#	This script was built to setup new testing environments
+#	with basic tools and files needed to get going.
+# 
+# Functions:
+# 	1.  Install the findserver script to /usr/bin/fs
+# 		This script was made to tell the user if the local
+# 		Seapine servers are running.
+# 	
+#	2.	Creates several aliases to make working from the 
+# 		Terminal easier.
+# 
+# 	3.	Installs Homebrew as well as wget and emacs. ( Mac Only )
+# 
+# 	4.	Downloads the specified version of Surround SCM to 
+# 		the Desktop.
+# 
+#	5.	Sets up default settings ( Mac Only )
+# 
+# 	6.	Installs the VMWare Graphics Driver. ( Mac Only )
+# 
+# 	7.	Runs the 32-bit library setup script if it 
+#		exists in the current directory ( Linux Only )
+# 
+# 	8.	The terminal will be closed to apply changes
+# 		Asks only if aliases where added
+# 
+# Testing:
+# 	This setup script has only been tested on
+# 		- Mac OS X 10.7 - 10.9
+# 		- CentOS 6.4
+# 		- Fedora 18
+#		- Suse 12
+# 
+# Known Bugs:
+# 	Ubuntu 13.04 - Mounting camelot fails which prevents the script from downloading Surround to the Desktop
+# 
+# Issues:
+# 	If any issues are found while using this script, 
+#	email stumpffk@seapine.com with the problem.
+# 	Please include the OS and distribution name ( Linux Only )
+# 
+# 
+#**********************************************************************
+#********************************************************************
+
 #Make sure user is root
 export user=$(whoami)
 if [ "$user" != "root" ]
@@ -131,8 +178,14 @@ printf "Do you want to add aliases? [y/n]: "
 read al_answer
 if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
 then
-	if [ "$distro" = "Ubuntu" ]
+	if [ "$distro" = "Ubuntu" ] || [ "$distro" = "Welcome" ]
 	then
+		# Add .bashrc to root's home dir
+		if [ "$distro" = "Welcome" ]
+		then
+			cp /etc/skel/.bash* /root/
+		fi
+		
 		#need to add aliases to .bashrc in both seapine and root home directories
 		
 		#/home/seapine/.bashrc
@@ -213,6 +266,7 @@ then
 			sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
 		fi
 		sudo -u seapine brew doctor
+		sudo -u seapine brew update
 		sudo -u seapine brew install wget
 		sudo -u seapine brew install emacs
 	fi
@@ -238,8 +292,44 @@ then
 		rmdir tempdir
 		echo "Extracting sscmmacosxinstall.dgm.gz"
 		gzip -d /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg.gz
-		chmod seapine:staff /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg.gz
+		chown seapine:staff /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg
 	fi
+	
+	# Set up default settings
+	printf "Do you want to change default settings for Finder and Dock? [y/n]: "
+	read defaults_answer
+	if [ "$defaults_answer" = "y" ] || [ "$defaults_answer" = "Y" ]
+	then
+		# Finder: allow quitting via COMMAND + Q; doing so will also hide desktop icons
+		defaults write com.apple.finder QuitMenuItem -bool true
+		# Finder: disable window animations and Get Info animations
+		defaults write com.apple.finder DisableAllAnimations -bool true
+		# Show icons for hard drives, servers, and removable media on the desktop
+		defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+		defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+		defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+		defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+		# Finder: show hidden files by default
+		defaults write com.apple.finder AppleShowAllFiles -bool true
+		# Finder: show status bar
+		defaults write com.apple.finder ShowStatusBar -bool true
+		# Finder: show path bar
+		defaults write com.apple.finder ShowPathbar -bool true
+		# When performing a search, search the current folder by default
+		defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+		# Show the ~/Library folder
+		chflags nohidden ~/Library
+		# restart Finder
+		killall "Finder" > /dev/null 2>&1
+		# Don’t animate opening applications from the Dock
+		defaults write com.apple.dock launchanim -bool false
+		# Speed up Mission Control animations
+		defaults write com.apple.dock expose-animation-duration -float 0.1
+		# restart Dock
+		killall "Dock" > /dev/null 2>&1
+		defaults write com.apple.terminal "Default Window Settings" -string "Homebrew"
+		defaults write com.apple.terminal "Startup Window Settings" -string "Homebrew"
+    fi
 	
 	#Installing VMWare Graphics Driver
 	printf "Do you want to install the VMWare graphics driver? [y/n]: "
@@ -258,7 +348,7 @@ then
 	fi
 	#if user did not install driver AND installed aliases,
 	#quit Mac terminal to apply aliases
-	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
+	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ] || [ "$defaults_answer" = "y" ] || [ "$defaults_answer" = "Y" ]
 	then
 		echo "Are you sure you want to close all open terminal windows? [y/n]"
 		read answer
@@ -304,14 +394,20 @@ else
 		chgrp seapine /home/seapine/Desktop/$build
 		echo "SCM install directory: /home/seapine/Desktop/$build"
 	fi
-	echo ""
-	echo "***** setup1.6.sh is now obsolete. *****"
-	printf "Do you still want to run setup1.6.sh? [n]: "
-	read ans_setup
-	ans_setup=${ans_setup:-n}
-	if [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
+	
+	# Only ask if setup1.6.sh exists
+	setup="setup1.6.sh"
+	if [ -f $setup ]
 	then
-		bash setup1.6.sh
+		echo ""
+		echo "***** setup1.6.sh is now obsolete. *****"
+		printf "Do you still want to run setup1.6.sh? [n]: "
+		read ans_setup
+		ans_setup=${ans_setup:-n}
+		if [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
+		then
+			bash $setup
+		fi
 	fi
 	# If aliases were added and the setup script was ran,
 	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ] || [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
@@ -329,5 +425,5 @@ else
 			fi
 		fi
 	fi
-echo "Finished!"
+	echo "Finished!"
 fi
