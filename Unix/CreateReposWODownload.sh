@@ -11,9 +11,8 @@ fi
 #Determine the OS:
 osname=$(uname -s)
 GotInfo=0
-LinuxDownload(){
-#Get test files off of devfiles on Linux
-########################################################################################################
+
+LinuxMount(){
 echo "Connecting to devfiles server"
 printf "Enter username [stumpffk]: "
 read -r username
@@ -21,54 +20,23 @@ username=${username:-stumpffk}
 printf "Enter password: "
 read -s -r password
 echo ""
-echo ""
-echo "Downloading files from devfiles server..."
 mkdir .mountdir > /dev/null 2>&1
-mkdir .tempdir > /dev/null 2>&1
 mount -t cifs //devfiles/QA .mountdir/ -o username=$username,domain=SEAPINE,password=$password
-echo "Copying directory [1 of 5]"
-cp -r .mountdir/Surround\ Test\ Files/Misc\ Files/* .tempdir
-echo "Copying directory [2 of 5]"
-cp -r .mountdir/Surround\ Test\ Files/Activations/Release1/* .tempdir
-echo "Copying directory [3 of 5]"
-cp .mountdir/Surround\ Test\ Files/SCMServDbfirstandhalf.zip .tempdir
-echo "Copying directory [4 of 5]"
-cp -r .mountdir/KyleS/VM_Files/samplefiles/* .tempdir
-echo "Copying directory [5 of 5]"
-cp .mountdir/*.jpg .tempdir
-echo "Finished downloading files!"
-echo ""
+}
+LinuxUmount () {
 umount .mountdir > /dev/null 2>&1
 rmdir .mountdir > /dev/null 2>&1
-########################################################################################################
 }
 
 
-MacDownload(){
-#Get test files off of devfiles on Mac
-########################################################################################################
+MacMount(){
 echo "Connecting to devfiles server"
 mkdir .mountdir > /dev/null 2>&1
-mkdir .tempdir > /dev/null 2>&1
-mount_smbfs //devfiles/QA .mountdir/ 
-echo "Downloading files from devfiles server..."
-echo "Copying directory [1 of 5]"
-cp -r .mountdir/Surround\ Test\ Files/Misc\ Files/* .tempdir
-echo "Copying directory [2 of 5]"
-cp -r .mountdir/Surround\ Test\ Files/Activations/Release1/* .tempdir
-echo "Copying directory [3 of 5]"
-cp .mountdir/Surround\ Test\ Files/SCMServDbfirstandhalf.zip .tempdir
-echo "Copying directory [4 of 5]"
-cp -r .mountdir/KyleS/VM_Files/samplefiles/* .tempdir
-echo "Copying directory [5 of 5]"
-cp .mountdir/*.jpg .tempdir
-echo "Finished downloading files!"
-echo ""
+mount_smbfs //devfiles/QA .mountdir/
+}
+MacUmount () {
 umount .mountdir > /dev/null 2>&1
 rmdir .mountdir > /dev/null 2>&1
-
-
-########################################################################################################
 }
 
 GetSCMInfo() {
@@ -93,9 +61,9 @@ if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
 then
 	if [ "$osname" = "Darwin" ]
 	then
-		MacDownload
+		MacMount
 	else
-		LinuxDownload
+		LinuxMount
 	fi
 
 	#Add files to Surround
@@ -106,19 +74,35 @@ then
 	fi
 	#getting first mainline
 	mainline=$(sscm lsmainline -y$scm_un:$scm_pw -z$scm_address:$scm_port | head -n 1)
+	echo "-------------------------"
 	echo "Mainlines on this server:"
 	echo $(sscm lsmainline -y$scm_un:$scm_pw -z$scm_address:$scm_port)
+	echo "-------------------------"
 	printf "Enter name of mainline to add files to [$mainline]: "
 	read -r scm_mainline
 	scm_mainline=${scm_mainline:-$mainline}
 	#add files to mainline
 	echo "Adding files to Surround mainline: $mainline"
-	sscm add ".tempdir/*" -b$scm_mainline -c- -p$scm_mainline -q -r -y$scm_un:$scm_pw -z$scm_address:$scm_port 
+	echo "Adding directory [1 of 5]"
+	sscm add ".mountdir/Surround\ Test\ Files/Misc\ Files/*" -b$scm_mainline -c- -p$scm_mainline -q -r -y$scm_un:$scm_pw -z$scm_address:$scm_port
+	echo "Adding directory [2 of 5]"
+	sscm add ".mountdir/Surround\ Test\ Files/Activations/Release1/*" -b$scm_mainline -c- -p$scm_mainline -q -r -y$scm_un:$scm_pw -z$scm_address:$scm_port
+	echo "Adding directory [3 of 5]"
+	sscm add ".mountdir/Surround\ Test\ Files/SCMServDbfirstandhalf.zip" -b$scm_mainline -c- -p$scm_mainline -q -y$scm_un:$scm_pw -z$scm_address:$scm_port
+	echo "Adding directory [4 of 5]"
+	sscm add ".mountdir/KyleS/VM_Files/samplefiles/*" -b$scm_mainline -c- -p$scm_mainline -q -r -y$scm_un:$scm_pw -z$scm_address:$scm_port
+	echo "Adding directory [5 of 5]"
+	sscm add ".mountdir/*.jpg" -b$scm_mainline -c- -p$scm_mainline -q -y$scm_un:$scm_pw -z$scm_address:$scm_port 
+	echo "Finished adding files!"
 	########################################################################################################
-
-	#Remove tempdir
-	rm -rf .tempdir > /dev/null 2>&1
+	if [ "$osname" = "Darwin" ]
+	then
+		MacUMount
+	else
+		LinuxUMount
+	fi
 fi
+
 printf "Do you want to add test users to Surround? [y/n]: "
 read answer
 if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
@@ -131,18 +115,21 @@ then
 	read num_users
 	for x in $(seq 1 $num_users); do
 		#Find if user exists in license server
-		resp=$(sscm lsuser test$x -g -y$scm_un:$scm_pw -z$scm_address:$scm_port)
+		lsuser_resp=$(sscm lsuser test$x -g -y$scm_un:$scm_pw -z$scm_address:$scm_port)
 		if [ "$resp" ]
 		then
 			sscm rtu test$x -y$scm_un:$scm_pw -z$scm_address:$scm_port
 			echo "user$x was retrieved from license server"
 		else
-			echo "Before adding to group"			
+			echo "Creating user$x..."
 			sscm adduser test$x -fTest -lUser$x -wtest$x -ifloating -y$scm_un:$scm_pw -z$scm_address:$scm_port
-			echo "user$x was created"
 		fi
 	done
-	sscm addgroup Testers -sgeneral+all:admin+all:users+all:files+all:branch+all -y$scm_un:$scm_pw -z$scm_address:$scm_port
+	group_resp=$(sscm lsgroup Testers -y$scm_un:$scm_pw -z$scm_address:$scm_port)
+	if [ ! "$group_resp" ]
+	then
+		sscm addgroup Testers -sgeneral+all:admin+all:users+all:files+all:branch+all -y$scm_un:$scm_pw -z$scm_address:$scm_port
+	fi
 	for x in $(seq 1 $num_users); do
 		sscm editgroup Testers -u+test$x -y$scm_un:$scm_pw -z$scm_address:$scm_port
 	done

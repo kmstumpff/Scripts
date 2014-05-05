@@ -37,7 +37,7 @@
 #NOTE!!: (This only takes Distro into account not version, some files may not be installed
 #         because they are not required for that version. Also this is meant as a helper 
 #         tool, not an all inclusive script that solves all issues. If anything is missing
-#	  please email rileym@seapine.com with the issues faced. Thank you. 
+#	  	  please email rileym@seapine.com with the issues faced. Thank you. 
 #
 #
 #*************************************************************************************************
@@ -151,7 +151,7 @@ echo $distro
   case  $distro  in
                 CentOS)       
 			echo "Installing Libraries for CentOS" >> /home/seapine/setupLib.log
-			echo "Install missing 32 libraries," >> /home/seapine/setupLib.log
+			echo "Install missing 32-bit libraries," >> /home/seapine/setupLib.log
 			echo "License Server Libraries," >> /home/seapine/setupLib.log
 			echo "and Solobug Libraries." >> /home/seapine/setupLib.log
 			yum -y install yum-skip-broken >> /home/seapine/setupLib.log
@@ -189,7 +189,8 @@ echo $distro
 				echo "New Host Name:" >> /home/seapine/setupLib.log
 				hostname  >> /home/seapine/setupLib.log
 			echo "New Host Name:"
-			echo hname
+			echo $(hname)
+			echo "Rebooting..." >> /home/seapine/setupLib.log
 			echo "Rebooting..."
 			reboot >> /home/seapine/setupLib.log
                     ;;
@@ -220,9 +221,9 @@ echo $distro
 				echo "New Host Name:" >> /home/seapine/setupLib.log
 			hname  >> /home/seapine/setupLib.log
 			echo "New Host Name:"
-			echo hname
+			echo $(hname)
 			echo "Rebooting..."
-			echo "Rebooting.." >> /home/seapine/setupLib.log
+			echo "Rebooting..." >> /home/seapine/setupLib.log
 			reboot >> /home/seapine/setupLib.log
 
                     ;; 
@@ -268,9 +269,9 @@ echo $distro
 			echo "New Host Name:" >> /home/seapine/setupLib.log
 			hostname  >> /home/seapine/setupLib.log	
 			echo "New Host Name:"
-			echo hname
+			echo $(hname)
 			echo "Rebooting..."
-			echo "Rebooting.." >> /home/seapine/setupLib.log
+			echo "Rebooting..." >> /home/seapine/setupLib.log
 			reboot >> /home/seapine/setupLib.log			
 			;;                       
 		Debian)
@@ -316,9 +317,9 @@ echo $distro
 			echo "New Host Name:" >> /home/seapine/setupLib.log
 			hostname  >> /home/seapine/setupLib.log	
 			echo "New Host Name:"
-			echo hname	
+			echo $(hname)
 			echo "Rebooting..."
-			echo "Rebooting.." >> /home/seapine/setupLib.log
+			echo "Rebooting..." >> /home/seapine/setupLib.log
 			reboot >> /home/seapine/setupLib.log			
 		    ;;
                Ubuntu)       
@@ -346,9 +347,9 @@ echo $distro
 			echo "New Host Name:" >> /home/seapine/setupLib.log
 			hname  >> /home/seapine/setupLib.log	
 			echo "New Host Name:"
-			echo hname	
+			echo $(hname)
 			echo "Rebooting..."
-			echo "Rebooting.." >> /home/seapine/setupLib.log
+			echo "Rebooting..." >> /home/seapine/setupLib.log
 			sleep 2
 			reboot >> /home/seapine/setupLib.log			
                     ;;

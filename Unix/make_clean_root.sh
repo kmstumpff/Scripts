@@ -5,6 +5,16 @@
 #new installs.
 #This script needs to be run as root.
 ##########################################################################
+
+#Make sure user is root
+export user=$(whoami)
+if [ "$user" != "root" ]
+then	
+	echo "Script must be run as root"
+	exit 1
+fi 
+
+
 #Stop all Seapine servers first
 surroundscm stop
 ttstudio stop
@@ -101,6 +111,22 @@ rm -vf /usr/lib/libclntsh.so.10.1
 rm -vf /usr/lib/libnnz10.so                        
 rm -vf /usr/lib/libociei.so 
 #Uninstall Postgres
-/usr/local/pgsql/uninstall-postgresql
-#rm -rvf /usr/local/pgsql
-#sudo userdel postgres
+sudo sppostgres stop
+if [ -f /usr/local/pgsql/uninstall-postgresql ]; then
+    echo "Running PostgreSQL uninstaller"
+	/usr/local/pgsql/uninstall-postgresql
+else
+	rm -rvf /usr/local/pgsql/data
+	rm -vf /usr/bin/sppostgres
+	rm -vf /etc/init.d/sppostgres
+	rm -vf /usr/bin/pg_dump
+	rm -vf /usr/bin/pg_dumpall
+	rm -vf /usr/bin/pg_restore
+	rm -vf /var/lib/alternatives/pgsql*
+	rm -vf /etc/alternatives/pgsql*
+	rm -rvf /usr/local/pgsql
+	userdel postgres
+fi
+echo "Press any key to reboot"
+read -s -n 1
+reboot

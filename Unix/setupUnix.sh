@@ -36,7 +36,7 @@
 #		- Suse 12
 # 
 # Known Bugs:
-# 	Ubuntu 13.04 - Mounting camelot fails which prevents the script from downloading Surround to the Desktop
+# 	Ubuntu 13.04 & Debian 6- Mounting camelot fails which prevents the script from downloading Surround to the Desktop
 # 
 # Issues:
 # 	If any issues are found while using this script, 
@@ -50,11 +50,22 @@
 #Make sure user is root
 export user=$(whoami)
 if [ "$user" != "root" ]
-then	
-	echo "Script must be run as root"
-	exit 1
-fi 
+then
+   #User is not root or using sudo...
+   #If script exists in the current working directory, we can relaunch with elevated privileges.
+   setupUnix="setupUnix.sh"
+	if [ -f $setupUnix ]
+   then
+      sudo $setupUnix
+   else
+      #We don't know where the script is. User must relaunch manually as root or with sudo.
+      echo "Script must be run as root"
+      exit 1
+   fi
+fi
 
+echo "Please enter your username"
+read username
 
 osname=$(uname -s)
 
@@ -178,7 +189,7 @@ printf "Do you want to add aliases? [y/n]: "
 read al_answer
 if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
 then
-	if [ "$distro" = "Ubuntu" ] || [ "$distro" = "Welcome" ]
+	if [[ ("$distro" = "Ubuntu") || ("$distro" = "Welcome") || ("$distro" = "Debian") ]]
 	then
 		# Add .bashrc to root's home dir
 		if [ "$distro" = "Welcome" ]
@@ -189,7 +200,7 @@ then
 		#need to add aliases to .bashrc in both seapine and root home directories
 		
 		#/home/seapine/.bashrc
-		echo "alias la='ls -lah'" >> /home/seapine/.bashrc
+		echo "alias la='ls -lAh'" >> /home/seapine/.bashrc
 		echo "alias ll='ls -lh'" >> /home/seapine/.bashrc
 		echo "alias cd..='cd ..'"  >> /home/seapine/.bashrc
 		echo "alias clr='clear'"  >> /home/seapine/.bashrc
@@ -200,12 +211,13 @@ then
 		echo "alias spstart='spls start;surroundscm start'" >> /home/seapine/.bashrc
 		echo "alias spstop='spls stop;surroundscm stop'" >> /home/seapine/.bashrc
 		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /home/seapine/.bashrc
-		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /home/seapine/.bashrc
-		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /home/seapine/.bashrc
-		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\stumpffk'"  >> /home/seapine/.bashrc
+		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
+		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
+		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/seapine/.bashrc
+        echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/seapine/.bashrc
 		
 		#/root/.bashrc
-		echo "alias la='ls -lah'" >> /root/.bashrc
+		echo "alias la='ls -lAh'" >> /root/.bashrc
 		echo "alias ll='ls -lh'" >> /root/.bashrc
 		echo "alias cd..='cd ..'"  >> /root/.bashrc
 		echo "alias clr='clear'"  >> /root/.bashrc
@@ -216,13 +228,14 @@ then
 		echo "alias spstart='spls start;surroundscm start'" >> /root/.bashrc
 		echo "alias spstop='spls stop;surroundscm stop'" >> /root/.bashrc
 		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /root/.bashrc	
-		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /root/.bashrc
-		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /root/.bashrc
-		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\stumpffk'"  >> /root/.bashrc
+		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
+		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
+		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /root/.bashrc
+        echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /root/.bashrc
 		
 	else
 		#appending aliases to "/etc/bashrc"
-		echo "alias la='ls -lah'" >> /etc/bashrc
+		echo "alias la='ls -lAh'" >> /etc/bashrc
 		echo "alias ll='ls -lh'" >> /etc/bashrc
 		echo "alias cd..='cd ..'"  >> /etc/bashrc
 		echo "alias clr='clear'"  >> /etc/bashrc
@@ -233,9 +246,10 @@ then
 		echo "alias spstart='spls start;surroundscm start'" >> /etc/bashrc
 		echo "alias spstop='spls stop;surroundscm stop'" >> /etc/bashrc
 		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /etc/bashrc
-		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /etc/bashrc
-		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\stumpffk'"  >> /etc/bashrc
-		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\stumpffk'"  >> /etc/bashrc
+		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
+		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
+		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /etc/bashrc
+      echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /etc/bashrc
 	fi
 fi
 
@@ -281,10 +295,13 @@ then
 		echo "Enter the build number [i.e. 1]"
 		read buildnum
 		export build="build$buildnum"
+		echo "Enter password for $username: "
+		read -s password
+		echo ""
 		echo "Downloading Surround SCM $release $build"
 		mkdir tempdir
 		mkdir /Users/seapine/Desktop/$build
-		mount_smbfs //camelot/UpcomingReleases/SCM/$release/$build tempdir
+		mount_smbfs //$username@camelot/UpcomingReleases/SCM/$release/$build tempdir
 		#clear password
 		export password=""
 		cp tempdir/sscmmacosxinstall.dmg.gz /Users/seapine/Desktop/$build
@@ -366,6 +383,11 @@ else
 	read dl_answer
 	if [ "$dl_answer" = "y" ] || [ "$dl_answer" = "Y" ]
 	then
+      # We must have smbfs installed in order to mount camelot
+      if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
+      then
+         apt-get install smbfs -y >> /dev/null
+      fi
 		printf "Enter the release version [2013.2.0]: "
 		read release
 		release=${release:-2013.2.0}
@@ -373,15 +395,13 @@ else
 		read buildnum
 		buildnum=${buildnum:-20}
 		export build="build$buildnum"
-		printf "Enter username [stumpffk]: "
-		read username
-		username=${username:-stumpffk}
+		printf "Enter username for $username: "
 		printf "Enter password: "
 		read -s password
 		echo ""
 		echo "Downloading Surround SCM $release $build"
-		mkdir .tempdir
-		mkdir /home/seapine/Desktop/$build
+		mkdir .tempdir >> /dev/null
+		mkdir /home/seapine/Desktop/$build >> /dev/null
 		mount -t cifs //camelot/UpcomingReleases/SCM/$release/$build .tempdir/ -o username=$username,domain=SEAPINE,password=$password
 		#clear password
 		export password=""
@@ -394,7 +414,6 @@ else
 		chgrp seapine /home/seapine/Desktop/$build
 		echo "SCM install directory: /home/seapine/Desktop/$build"
 	fi
-	
 	# Only ask if setup1.6.sh exists
 	setup="setup1.6.sh"
 	if [ -f $setup ]
@@ -425,5 +444,5 @@ else
 			fi
 		fi
 	fi
-	echo "Finished!"
+echo "Finished!"
 fi
