@@ -56,7 +56,7 @@ then
    setupUnix="setupUnix.sh"
 	if [ -f $setupUnix ]
    then
-      sudo $setupUnix
+      sudo bash $setupUnix
    else
       #We don't know where the script is. User must relaunch manually as root or with sudo.
       echo "Script must be run as root"
