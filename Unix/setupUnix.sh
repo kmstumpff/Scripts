@@ -57,6 +57,7 @@ then
 	if [ -f $setupUnix ]
    then
       sudo bash $setupUnix
+      exit 0
    else
       #We don't know where the script is. User must relaunch manually as root or with sudo.
       echo "Script must be run as root"
@@ -380,8 +381,8 @@ then
 else
 	#Download Surround
 	printf "Do you want to download Surround to the Desktop? [y/n]: "
-	read dl_answer
-	if [ "$dl_answer" = "y" ] || [ "$dl_answer" = "Y" ]
+	read dl_scm_answer
+	if [ "$dl_scm_answer" = "y" ] || [ "$dl_scm_answer" = "Y" ]
 	then
       # We must have smbfs installed in order to mount camelot
       if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
@@ -414,6 +415,41 @@ else
 		chgrp seapine /home/seapine/Desktop/$build
 		echo "SCM install directory: /home/seapine/Desktop/$build"
 	fi
+
+        #Download TestTrack
+        printf "Do you want to download TestTrack to the Desktop? [y/n]: "
+        read dl_tt_answer
+        if [ "$dl_tt_answer" = "y" ] || [ "$dl_tt_answer" = "Y" ]
+        then
+                printf "Enter the release version [2014.1.0]: "
+                read release
+                release=${release:-2014.1.0}
+                printf "Enter the build number [10]: "
+                read buildnum
+                buildnum=${buildnum:-10}
+                build="Build_$buildnum"
+                filename="ttlinuxinstall_$build.tar.gz"
+		printf "Enter password for $username: "
+                read -s password
+                echo ""
+                echo "Downloading TestTrack $release $build"
+                mkdir .tempdir >> /dev/null
+		mkdir /home/seapine/Desktop/TestTrack >> /dev/null
+                mkdir /home/seapine/Desktop/TestTrack/$build >> /dev/null
+                mount -t cifs //camelot/UpcomingReleases/TestTrack/TTPro_$release .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+                #clear password
+                export password=""
+                cp .tempdir/$filename /home/seapine/Desktop/TestTrack/$build
+                umount .tempdir
+                rmdir .tempdir
+                echo "Extracting $filename"
+                tar -xf /home/seapine/Desktop/TestTrack/$build/$filename -C /home/seapine/Desktop/TestTrack/$build
+                chown seapine /home/seapine/Desktop/TestTrack/$build
+                chgrp seapine /home/seapine/Desktop/TestTrack/$build
+                echo "TT install directory: /home/seapine/Desktop/TestTrack/$build"
+        fi
+
+
 	# Only ask if setup1.6.sh exists
 	setup="setup1.6.sh"
 	if [ -f $setup ]
