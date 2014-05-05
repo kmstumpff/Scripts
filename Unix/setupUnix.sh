@@ -387,6 +387,7 @@ else
       if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
       then
          apt-get install smbfs -y >> /dev/null
+         apt-get install cifs-utils -y >> /dev/null
       fi
 		printf "Enter the release version [2013.2.0]: "
 		read release
@@ -395,8 +396,7 @@ else
 		read buildnum
 		buildnum=${buildnum:-20}
 		export build="build$buildnum"
-		printf "Enter username for $username: "
-		printf "Enter password: "
+		printf "Enter password for $username: "
 		read -s password
 		echo ""
 		echo "Downloading Surround SCM $release $build"
