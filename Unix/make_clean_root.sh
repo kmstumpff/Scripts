@@ -125,6 +125,7 @@ else
 	rm -vf /var/lib/alternatives/pgsql*
 	rm -vf /etc/alternatives/pgsql*
 	rm -rvf /usr/local/pgsql
+	rm -vf /etc/init.d/sppostgres
 	userdel postgres
 fi
 echo "Press any key to reboot"
