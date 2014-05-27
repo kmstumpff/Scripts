@@ -115,19 +115,18 @@ sudo sppostgres stop
 if [ -f /usr/local/pgsql/uninstall-postgresql ]; then
     echo "Running PostgreSQL uninstaller"
 	/usr/local/pgsql/uninstall-postgresql
-else
-	rm -rvf /usr/local/pgsql/data
-	rm -vf /usr/bin/sppostgres
-	rm -vf /etc/init.d/sppostgres
-	rm -vf /usr/bin/pg_dump
-	rm -vf /usr/bin/pg_dumpall
-	rm -vf /usr/bin/pg_restore
-	rm -vf /var/lib/alternatives/pgsql*
-	rm -vf /etc/alternatives/pgsql*
-	rm -rvf /usr/local/pgsql
-	rm -vf /etc/init.d/sppostgres
-	userdel postgres
 fi
+rm -rvf /usr/local/pgsql/data
+rm -vf /usr/bin/sppostgres
+rm -vf /etc/init.d/sppostgres
+rm -vf /usr/bin/pg_dump
+rm -vf /usr/bin/pg_dumpall
+rm -vf /usr/bin/pg_restore
+rm -vf /var/lib/alternatives/pgsql*
+rm -vf /etc/alternatives/pgsql*
+rm -rvf /usr/local/pgsql
+rm -vf /etc/init.d/sppostgres
+userdel postgres
 echo "Press any key to reboot"
 read -s -n 1
 reboot
