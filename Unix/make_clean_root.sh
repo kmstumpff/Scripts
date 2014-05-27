@@ -128,5 +128,5 @@ rm -rvf /usr/local/pgsql
 rm -vf /etc/init.d/sppostgres
 userdel postgres
 echo "Press any key to reboot"
-read -s -n 1
+read -n 1
 reboot
