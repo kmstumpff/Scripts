@@ -31,12 +31,17 @@
 # Testing:
 # 	This setup script has only been tested on
 # 		- Mac OS X 10.7 - 10.9
+#		- Ubuntu 13.04, 13.10 & 14.04
 # 		- CentOS 6.4
 # 		- Fedora 18
 #		- Suse 12
 # 
 # Known Bugs:
-# 	Ubuntu 13.04 & Debian 6- Mounting camelot fails which prevents the script from downloading Surround to the Desktop
+#	None.
+#
+# Fixed Bugs:
+#	Ubuntu 13.04 & Debian 6- Mounting camelot fails which prevents the script from downloading Surround to the Desktop
+#		- Installs cifs-utils and smbfs packages on Ubuntu and Debian
 # 
 # Issues:
 # 	If any issues are found while using this script, 
