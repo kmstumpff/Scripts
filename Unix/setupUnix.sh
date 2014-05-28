@@ -397,26 +397,26 @@ else
       fi
 		printf "Enter password for $username: "
 		read -s password
-		echo ""
-		echo "Downloading Surround SCM $release $build"
 		mkdir .tempdir >> /dev/null
 		mkdir /home/seapine/Desktop/$build >> /dev/null
 		mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
 		#clear password
 		export password=""
 		printf "Release Versions\n"
-		printf "----------------\n"
+		printf "================\n"
 		ls .tempdir/ | grep 20 --color=never
 		printf "Enter the release version [2014.1.0]: "
 		read release
 		release=${release:-2014.1.0}
 		printf "Build Numbers\n"
-		printf "-------------\n"
-		ls .tempdir/2014.0.1/ | grep build --color=never | cut -b 6-
+		printf "=============\n"
+		ls .tempdir/$release/ | grep build --color=never | cut -b 6-
 		printf "Enter the build number [6]: "
 		read buildnum
 		buildnum=${buildnum:-6}
 		export build="build$buildnum"
+		echo ""
+		echo "Downloading Surround SCM $release $build"
 		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/seapine/Desktop/$build
 		umount .tempdir
 		rmdir .tempdir
