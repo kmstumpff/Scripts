@@ -33,7 +33,7 @@
 # 		- Mac OS X 10.7 - 10.9
 #		- Ubuntu 13.04, 13.10 & 14.04
 # 		- CentOS 6.4
-# 		- Fedora 18
+# 		- Fedora 18 & 19
 #		- Suse 12
 # 
 # Known Bugs:
@@ -398,8 +398,12 @@ else
 		printf "Enter password for $username: "
 		read -s password
 		mkdir .tempdir >> /dev/null
-		mkdir /home/seapine/Desktop/$build >> /dev/null
-		mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+		if [[ ("$distro" = "Fedora") ]]
+		then
+			su -c 'mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+		else
+			mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+		fi
 		#clear password
 		export password=""
 		printf "Release Versions\n"
@@ -417,6 +421,7 @@ else
 		export build="build$buildnum"
 		echo ""
 		echo "Downloading Surround SCM $release $build"
+		mkdir /home/seapine/Desktop/$build >> /dev/null
 		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/seapine/Desktop/$build
 		umount .tempdir
 		rmdir .tempdir
@@ -447,7 +452,12 @@ else
 			mkdir .tempdir >> /dev/null
 			mkdir /home/seapine/Desktop/TestTrack >> /dev/null
 			mkdir /home/seapine/Desktop/TestTrack/$build >> /dev/null
-			mount -t cifs //camelot/UpcomingReleases/TestTrack/TTPro_$release .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+			if [[ ("$distro" = "Fedora") ]]
+			then
+				su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/TTPro_$release .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+			else
+				mount -t cifs //camelot/UpcomingReleases/TestTrack/TTPro_$release .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+			fi
 			#clear password
 			export password=""
 			cp .tempdir/$filename /home/seapine/Desktop/TestTrack/$build
