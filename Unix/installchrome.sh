@@ -20,9 +20,26 @@ hdiutil detach -quiet /Volumes/Google\ Chrome/
 }
 
 osname=$(uname -s)
-
-if [ "$osname" = "Linux" ]
+if [ "$osname" = "Darwin" ]
 then
+	# Install for Mac
+	# Is Homebrew AND wget installed?
+	path_brew=$(which brew)
+	path_wget=$(which wget)
+	if [ -f "$path_wget" ]
+	then
+		MacInstall
+		return 0
+	else
+		echo "Homebrew not found. Installing Homebrew and wget..."
+		sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+		sudo -u seapine brew doctor
+		sudo -u seapine brew install wget
+		echo "Homebrew and wget installed."
+		MacInstall
+		return 0
+	fi
+else
 	#Determine the distro of Linux:
 	echo "Determining the distribution you are using" 
 	distro=$(head -1 /etc/issue | awk '{print $1}')
@@ -116,59 +133,4 @@ then
 			echo "Not Supported"
 			;;
 			esac
-elif [ "$osname" = "Darwin" ]
-then
-	# Install for Mac
-	# Is Homebrew AND wget installed?
-	path_brew=$(which brew)
-	path_wget=$(which wget)
-	if [ -f "$path_wget" ]
-	then
-		MacInstall
-	elif [ -f "$path_brew" ]
-		echo "Wget not found."
-		sudo -u seapine brew install wget
-		echo "wget installed."
-		MacInstall
-	else
-		echo "Homebrew not found. Installing Homebrew and wget..."
-		sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
-		sudo -u seapine brew doctor
-		sudo -u seapine brew install wget
-		echo "Homebrew and wget installed."
-		MacInstall
-	fi
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
