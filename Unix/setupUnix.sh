@@ -276,14 +276,14 @@ then
 	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
 	then
 		echo "Installing Homebrew"
-		sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+		sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 		printf "Did homebrew install correctly? [y/n]: "
 		read answer
 		if [ "$answer" = "n" ] || [ "$answer" = "N" ]
 		then
 			printf "Make sure Xcode stuff installs correctly then hit any key to try again: "
 			read -s -n 1
-			sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+			sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 		fi
 		sudo -u seapine brew doctor
 		sudo -u seapine brew update
