@@ -463,7 +463,7 @@ else
 		export password=""
 		printf "Release Versions\n"
 		printf "================\n"
-		ls .tempdir/ | grep TTPro_ --color=never | cut -b 7-
+		ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7-
 		printf "Enter the release version [2014.1.0]: "
 		read nRelease
 		nRelease=${release:-2014.1.0}
@@ -478,7 +478,7 @@ else
 			y=$(($y+1))
 		done
 		lastBuild=$(($y+1))
-		echo "Build_$lastBuild"
+		echo "$lastBuild"
 		printf "Enter the build number [$lastBuild]: "
 		read buildnum
 		buildnum=${buildnum:-$lastBuild}
