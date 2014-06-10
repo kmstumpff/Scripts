@@ -485,9 +485,9 @@ else
 		build="Build_$buildnum"
 		filename="ttlinuxinstall_$build.tar.gz"
 		echo ""
-		echo "Downloading TestTrack $release $build"
+		echo "Downloading TestTrack $nRelease $build"
 		mkdir /home/seapine/Desktop/TestTrack$build >> /dev/null
-		cp .tempdir/$release/$build /home/seapine/Desktop/TestTrack/$build
+		cp .tempdir/$release/$build/$filename /home/seapine/Desktop/TestTrack/$build
 		umount .tempdir
 		rmdir .tempdir
 		echo "Extracting $filename"
