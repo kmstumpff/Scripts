@@ -487,7 +487,12 @@ else
 		echo ""
 		echo "Downloading TestTrack $nRelease $build"
 		mkdir /home/seapine/Desktop/TestTrack$build >> /dev/null
-		cp .tempdir/$release/$build/$filename /home/seapine/Desktop/TestTrack/$build
+		if [[ ("$buildnum" = "$lastBuild") ]]
+		then
+			cp .tempdir/$release/$filename /home/seapine/Desktop/TestTrack/$build
+		else
+			cp .tempdir/$release/$build/$filename /home/seapine/Desktop/TestTrack/$build
+		fi
 		umount .tempdir
 		rmdir .tempdir
 		echo "Extracting $filename"
