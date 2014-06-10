@@ -463,7 +463,7 @@ else
 		export password=""
 		printf "Release Versions\n"
 		printf "================\n"
-		ls .tempdir/ | grep 20 --color=never
+		ls .tempdir/ | grep TTPro_ --color=never | cut -b 7-
 		printf "Enter the release version [2014.1.0]: "
 		read nRelease
 		nRelease=${release:-2014.1.0}
@@ -471,7 +471,7 @@ else
 		printf "Build Numbers\n"
 		printf "=============\n"
 		y=0
-		list=$(ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 25-)
+		list=$(ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 31-)
 		for x in $list
 		do
 			echo $x
