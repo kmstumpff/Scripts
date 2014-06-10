@@ -389,12 +389,12 @@ else
 	read dl_scm_answer
 	if [ "$dl_scm_answer" = "y" ] || [ "$dl_scm_answer" = "Y" ]
 	then
-      # We must have smbfs installed in order to mount camelot
-      if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
-      then
-         apt-get install smbfs -y >> /dev/null
-         apt-get install cifs-utils -y >> /dev/null
-      fi
+		# We must have smbfs installed in order to mount camelot
+		if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
+		then
+			apt-get install smbfs -y >> /dev/null
+			apt-get install cifs-utils -y >> /dev/null
+		fi
 		printf "Enter password for $username: "
 		read -s password
 		mkdir .tempdir >> /dev/null
@@ -408,16 +408,23 @@ else
 		export password=""
 		printf "Release Versions\n"
 		printf "================\n"
-		ls .tempdir/ | grep 20 --color=never
+		ls .tempdir/ | grep 20 --color=never | cut -b 7-
 		printf "Enter the release version [2014.1.0]: "
 		read release
 		release=${release:-2014.1.0}
 		printf "Build Numbers\n"
 		printf "=============\n"
-		ls .tempdir/$release/ | grep build --color=never | cut -b 6-
-		printf "Enter the build number [6]: "
+		y=0
+		list=$(ls .tempdir/2014.1.0 | grep build --color=never)
+		for x in $list
+		do
+			echo $x
+			y=$(($y+1))
+		done
+		lastBuild=$(($y))
+		printf "Enter the build number [$lastBuild]: "
 		read buildnum
-		buildnum=${buildnum:-6}
+		buildnum=${buildnum:-$lastBuild}
 		export build="build$buildnum"
 		echo ""
 		echo "Downloading Surround SCM $release $build"
@@ -437,37 +444,57 @@ else
 	read dl_tt_answer
 	if [ "$dl_tt_answer" = "y" ] || [ "$dl_tt_answer" = "Y" ]
 	then
-			printf "Enter the release version [2014.1.0]: "
-			read release
-			release=${release:-2014.1.0}
-			printf "Enter the build number [10]: "
-			read buildnum
-			buildnum=${buildnum:-10}
-			build="Build_$buildnum"
-			filename="ttlinuxinstall_$build.tar.gz"
-			printf "Enter password for $username: "
-			read -s password
-			echo ""
-			echo "Downloading TestTrack $release $build"
-			mkdir .tempdir >> /dev/null
-			mkdir /home/seapine/Desktop/TestTrack >> /dev/null
-			mkdir /home/seapine/Desktop/TestTrack/$build >> /dev/null
-			if [[ ("$distro" = "Fedora") ]]
-			then
-				su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/TTPro_$release .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
-			else
-				mount -t cifs //camelot/UpcomingReleases/TestTrack/TTPro_$release .tempdir/ -o username=$username,domain=SEAPINE,password=$password
-			fi
-			#clear password
-			export password=""
-			cp .tempdir/$filename /home/seapine/Desktop/TestTrack/$build
-			umount .tempdir
-			rmdir .tempdir
-			echo "Extracting $filename"
-			tar -xf /home/seapine/Desktop/TestTrack/$build/$filename -C /home/seapine/Desktop/TestTrack/$build
-			chown seapine /home/seapine/Desktop/TestTrack/$build
-			chgrp seapine /home/seapine/Desktop/TestTrack/$build
-			echo "TT install directory: /home/seapine/Desktop/TestTrack/$build"
+		# We must have smbfs installed in order to mount camelot
+		if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
+		then
+			apt-get install smbfs -y >> /dev/null
+			apt-get install cifs-utils -y >> /dev/null
+		fi
+		printf "Enter password for $username: "
+		read -s password
+		mkdir .tempdir >> /dev/null
+		if [[ ("$distro" = "Fedora") ]]
+		then
+			su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+		else
+			mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+		fi
+		#clear password
+		export password=""
+		printf "Release Versions\n"
+		printf "================\n"
+		ls .tempdir/ | grep 20 --color=never
+		printf "Enter the release version [2014.1.0]: "
+		read nRelease
+		nRelease=${release:-2014.1.0}
+		release="TTPro_$nRelease"
+		printf "Build Numbers\n"
+		printf "=============\n"
+		y=0
+		list=$(ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 25-)
+		for x in $list
+		do
+			echo $x
+			y=$(($y+1))
+		done
+		lastBuild=$(($y+1))
+		echo "Build_$lastBuild"
+		printf "Enter the build number [$lastBuild]: "
+		read buildnum
+		buildnum=${buildnum:-$lastBuild}
+		build="Build_$buildnum"
+		filename="ttlinuxinstall_$build.tar.gz"
+		echo ""
+		echo "Downloading TestTrack $release $build"
+		mkdir /home/seapine/Desktop/TestTrack$build >> /dev/null
+		cp .tempdir/$release/$build /home/seapine/Desktop/TestTrack/$build
+		umount .tempdir
+		rmdir .tempdir
+		echo "Extracting $filename"
+		tar -xf /home/seapine/Desktop/TestTrack/$build/$filename -C /home/seapine/Desktop/TestTrack/$build
+		chown seapine /home/seapine/Desktop/TestTrack/$build
+		chgrp seapine /home/seapine/Desktop/TestTrack/$build
+		echo "TT install directory: /home/seapine/Desktop/TestTrack/$build"
 	fi
 
 
