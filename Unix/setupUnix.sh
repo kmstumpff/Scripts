@@ -464,9 +464,10 @@ else
 		printf "Release Versions\n"
 		printf "================\n"
 		ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7-
-		printf "Enter the release version [2014.1.0]: "
+		lastVersion=$(ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7- | tail -n 1)
+		printf "Enter the release version [$lastVersion]: "
 		read nRelease
-		nRelease=${release:-2014.1.0}
+		nRelease=${release:-$lastVersion}
 		release="TTPro_$nRelease"
 		printf "Build Numbers\n"
 		printf "=============\n"
