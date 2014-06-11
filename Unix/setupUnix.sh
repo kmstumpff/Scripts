@@ -82,7 +82,11 @@ then
 	distro=$(head -1 /etc/issue | awk '{print $1}')
 fi
 
-printf "Do you want to install findservers? [y/n]: "
+if [[ -f "/usr/bin/fs" ]]
+then
+	echo "findservers already exists. Skipping..."
+else
+	printf "Do you want to install findservers? [y/n]: "
 	read fs_answer
 	if [ "$fs_answer" = "y" ] || [ "$fs_answer" = "Y" ]
 	then
@@ -189,76 +193,80 @@ printf "Do you want to install findservers? [y/n]: "
 		echo 'echo ""' >> /usr/bin/fs
 		chmod 777 /usr/bin/fs
 	fi
-
-
-printf "Do you want to add aliases? [y/n]: "
-read al_answer
-if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
-then
-	if [[ ("$distro" = "Ubuntu") || ("$distro" = "Welcome") || ("$distro" = "Debian") ]]
-	then
-		# Add .bashrc to root's home dir
-		if [ "$distro" = "Welcome" ]
-		then
-			cp /etc/skel/.bash* /root/
-		fi
-		
-		#need to add aliases to .bashrc in both seapine and root home directories
-		
-		#/home/seapine/.bashrc
-		echo "alias la='ls -lAh'" >> /home/seapine/.bashrc
-		echo "alias ll='ls -lh'" >> /home/seapine/.bashrc
-		echo "alias cd..='cd ..'"  >> /home/seapine/.bashrc
-		echo "alias clr='clear'"  >> /home/seapine/.bashrc
-		echo "alias sstart='surroundscm start'"  >> /home/seapine/.bashrc
-		echo "alias sstop='surroundscm stop'"  >> /home/seapine/.bashrc
-		echo "alias lstart='spls start'"  >> /home/seapine/.bashrc
-		echo "alias lstop='spls stop'"  >> /home/seapine/.bashrc
-		echo "alias spstart='spls start;surroundscm start'" >> /home/seapine/.bashrc
-		echo "alias spstop='spls stop;surroundscm stop'" >> /home/seapine/.bashrc
-		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /home/seapine/.bashrc
-		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
-		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
-		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/seapine/.bashrc
-        echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/seapine/.bashrc
-		
-		#/root/.bashrc
-		echo "alias la='ls -lAh'" >> /root/.bashrc
-		echo "alias ll='ls -lh'" >> /root/.bashrc
-		echo "alias cd..='cd ..'"  >> /root/.bashrc
-		echo "alias clr='clear'"  >> /root/.bashrc
-		echo "alias sstart='surroundscm start'"  >> /root/.bashrc
-		echo "alias sstop='surroundscm stop'"  >> /root/.bashrc
-		echo "alias lstart='spls start'"  >> /root/.bashrc
-		echo "alias lstop='spls stop'"  >> /root/.bashrc
-		echo "alias spstart='spls start;surroundscm start'" >> /root/.bashrc
-		echo "alias spstop='spls stop;surroundscm stop'" >> /root/.bashrc
-		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /root/.bashrc	
-		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
-		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
-		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /root/.bashrc
-        echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /root/.bashrc
-		
-	else
-		#appending aliases to "/etc/bashrc"
-		echo "alias la='ls -lAh'" >> /etc/bashrc
-		echo "alias ll='ls -lh'" >> /etc/bashrc
-		echo "alias cd..='cd ..'"  >> /etc/bashrc
-		echo "alias clr='clear'"  >> /etc/bashrc
-		echo "alias sstart='surroundscm start'"  >> /etc/bashrc
-		echo "alias sstop='surroundscm stop'"  >> /etc/bashrc
-		echo "alias lstart='spls start'"  >> /etc/bashrc
-		echo "alias lstop='spls stop'"  >> /etc/bashrc
-		echo "alias spstart='spls start;surroundscm start'" >> /etc/bashrc
-		echo "alias spstop='spls stop;surroundscm stop'" >> /etc/bashrc
-		echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /etc/bashrc
-		echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
-		echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
-		echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /etc/bashrc
-      echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /etc/bashrc
-	fi
 fi
 
+if [[ $(alias | grep -c devfiles) -gt 0 ]]
+then
+	echo "Aliases have already been installed. Skipping..."
+else
+	printf "Do you want to add aliases? [y/n]: "
+	read al_answer
+	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
+	then
+		if [[ ("$distro" = "Ubuntu") || ("$distro" = "Welcome") || ("$distro" = "Debian") ]]
+		then
+			# Add .bashrc to root's home dir
+			if [ "$distro" = "Welcome" ]
+			then
+				cp /etc/skel/.bash* /root/
+			fi
+			
+			#need to add aliases to .bashrc in both seapine and root home directories
+			
+			#/home/seapine/.bashrc
+			echo "alias la='ls -lAh'" >> /home/seapine/.bashrc
+			echo "alias ll='ls -lh'" >> /home/seapine/.bashrc
+			echo "alias cd..='cd ..'"  >> /home/seapine/.bashrc
+			echo "alias clr='clear'"  >> /home/seapine/.bashrc
+			echo "alias sstart='surroundscm start'"  >> /home/seapine/.bashrc
+			echo "alias sstop='surroundscm stop'"  >> /home/seapine/.bashrc
+			echo "alias lstart='spls start'"  >> /home/seapine/.bashrc
+			echo "alias lstop='spls stop'"  >> /home/seapine/.bashrc
+			echo "alias spstart='spls start;surroundscm start'" >> /home/seapine/.bashrc
+			echo "alias spstop='spls stop;surroundscm stop'" >> /home/seapine/.bashrc
+			echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /home/seapine/.bashrc
+			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
+			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
+			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/seapine/.bashrc
+			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/seapine/.bashrc
+			
+			#/root/.bashrc
+			echo "alias la='ls -lAh'" >> /root/.bashrc
+			echo "alias ll='ls -lh'" >> /root/.bashrc
+			echo "alias cd..='cd ..'"  >> /root/.bashrc
+			echo "alias clr='clear'"  >> /root/.bashrc
+			echo "alias sstart='surroundscm start'"  >> /root/.bashrc
+			echo "alias sstop='surroundscm stop'"  >> /root/.bashrc
+			echo "alias lstart='spls start'"  >> /root/.bashrc
+			echo "alias lstop='spls stop'"  >> /root/.bashrc
+			echo "alias spstart='spls start;surroundscm start'" >> /root/.bashrc
+			echo "alias spstop='spls stop;surroundscm stop'" >> /root/.bashrc
+			echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /root/.bashrc	
+			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
+			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
+			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /root/.bashrc
+			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /root/.bashrc
+			
+		else
+			#appending aliases to "/etc/bashrc"
+			echo "alias la='ls -lAh'" >> /etc/bashrc
+			echo "alias ll='ls -lh'" >> /etc/bashrc
+			echo "alias cd..='cd ..'"  >> /etc/bashrc
+			echo "alias clr='clear'"  >> /etc/bashrc
+			echo "alias sstart='surroundscm start'"  >> /etc/bashrc
+			echo "alias sstop='surroundscm stop'"  >> /etc/bashrc
+			echo "alias lstart='spls start'"  >> /etc/bashrc
+			echo "alias lstop='spls stop'"  >> /etc/bashrc
+			echo "alias spstart='spls start;surroundscm start'" >> /etc/bashrc
+			echo "alias spstop='spls stop;surroundscm stop'" >> /etc/bashrc
+			echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /etc/bashrc
+			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
+			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
+			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /etc/bashrc
+		  echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /etc/bashrc
+		fi
+	fi
+fi
 	
 #########################################
 #OS X
