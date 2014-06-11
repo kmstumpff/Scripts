@@ -483,6 +483,14 @@ else
 		printf "Enter the build number [$lastBuild]: "
 		read buildnum
 		buildnum=${buildnum:-$lastBuild}
+		if [[ $buildNum -lt 10 ]]
+		then
+			hasZero=$(echo $buildNum | grep -c 0)
+			if [[ $hasZero -eq 0 ]]
+			then
+				buildNum="0$buildNum"
+			fi
+		fi
 		build="Build_$buildnum"
 		filename="ttlinuxinstall_$build.tar.gz"
 		echo ""
