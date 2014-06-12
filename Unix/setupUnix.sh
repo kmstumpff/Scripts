@@ -498,6 +498,7 @@ else
 		if [ "$dl_latest_tt_answer" = "y" ] || [ "$dl_latest_tt_answer" = "Y" ]
 		then
 			release="TTPro_$lastVersion"
+			buildnum=$lastBuild		#Used for cp function below
 			build="Build_$lastBuild"
 		else
 		
