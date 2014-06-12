@@ -414,26 +414,39 @@ else
 		fi
 		#clear password
 		export password=""
-		printf "Release Versions\n"
-		printf "================\n"
-		ls .tempdir/ | grep 20 --color=never | cut -b 7-
-		printf "Enter the release version [2014.1.0]: "
-		read release
-		release=${release:-2014.1.0}
-		printf "Build Numbers\n"
-		printf "=============\n"
-		y=0
-		list=$(ls .tempdir/2014.1.0 | grep build --color=never)
-		for x in $list
-		do
-			echo $x
-			y=$(($y+1))
-		done
-		lastBuild=$(($y))
-		printf "Enter the build number [$lastBuild]: "
-		read buildnum
-		buildnum=${buildnum:-$lastBuild}
-		export build="build$buildnum"
+		
+		#Determine the latest version/build
+		lastVersion=$(ls .tempdir/ | grep 20 --color=never | cut -b 7- | tail -n 1)
+		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | tail -n 1)
+		
+		printf "Do you want to download the latest version($lastVersion build $lastBuild)? [y/n]: "
+		read dl_latest_scm_answer
+		if [ "$dl_latest_scm_answer" = "y" ] || [ "$dl_latest_scm_answer" = "Y" ]
+		then
+			release=$lastVersion
+			build=$lastBuild
+		else
+			printf "Release Versions\n"
+			printf "================\n"
+			ls .tempdir/ | grep 20 --color=never | cut -b 7-
+			printf "Enter the release version [2014.1.0]: "
+			read release
+			release=${release:-2014.1.0}
+			printf "Build Numbers\n"
+			printf "=============\n"
+			y=0
+			list=$(ls .tempdir/2014.1.0 | grep build --color=never)
+			for x in $list
+			do
+				echo $x
+				y=$(($y+1))
+			done
+			lastBuildNum=$(($y))
+			printf "Enter the build number [$lastBuildNum]: "
+			read buildnum
+			buildnum=${buildnum:-$lastBuildNum}
+			build="build$buildnum"
+		fi
 		echo ""
 		echo "Downloading Surround SCM $release $build"
 		mkdir /home/seapine/Desktop/$build >> /dev/null
@@ -469,36 +482,48 @@ else
 		fi
 		#clear password
 		export password=""
-		printf "Release Versions\n"
-		printf "================\n"
-		ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7-
+		
+		#Determine the latest version/build
 		lastVersion=$(ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7- | tail -n 1)
-		printf "Enter the release version [$lastVersion]: "
-		read nRelease
-		nRelease=${release:-$lastVersion}
-		release="TTPro_$nRelease"
-		printf "Build Numbers\n"
-		printf "=============\n"
-		y=0
 		list=$(ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 31-)
+		y=0
 		for x in $list
 		do
-			echo $x
 			y=$(($y+1))
 		done
 		lastBuild=$(($y+1))
-		echo "$lastBuild"
-		printf "Enter the build number [$lastBuild]: "
-		read buildnum
-		buildnum=${buildnum:-$lastBuild}
-		if [[ $buildnum -lt 10 ]]
+		
+		printf "Do you want to download the latest version($lastVersion build $lastBuild)? [y/n]: "
+		read dl_latest_tt_answer
+		if [ "$dl_latest_tt_answer" = "y" ] || [ "$dl_latest_tt_answer" = "Y" ]
 		then
-			hasZero=$(echo $buildnum | grep -c 0)
-			if [[ $hasZero -eq 0 ]]
+			release="TTPro_$lastVersion"
+			build="Build_$lastBuild"
+		else
+		
+			printf "Release Versions\n"
+			printf "================\n"
+			ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7-
+			printf "Enter the release version [$lastVersion]: "
+			read nRelease
+			nRelease=${release:-$lastVersion}
+			release="TTPro_$nRelease"
+			printf "Build Numbers\n"
+			printf "=============\n"
+			ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 31-
+			echo "$lastBuild"
+			printf "Enter the build number [$lastBuild]: "
+			read buildnum
+			buildnum=${buildnum:-$lastBuild}
+			if [[ $buildnum -lt 10 ]]
 			then
-				build="Build_0$buildnum"
-			else
-				build="Build_$buildnum"
+				hasZero=$(echo $buildnum | grep -c 0)
+				if [[ $hasZero -eq 0 ]]
+				then
+					build="Build_0$buildnum"
+				else
+					build="Build_$buildnum"
+				fi
 			fi
 		fi
 		filename="ttlinuxinstall_$build.tar.gz"
