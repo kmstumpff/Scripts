@@ -195,7 +195,7 @@ else
 	fi
 fi
 
-if [[ ( $( cat /home/seapine/.bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /home/seapine/.bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /root/.bashrc | grep -c devfiles ) -gt 0 ) ]]
+if [[ ( $( cat /etc/bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /home/seapine/.bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /root/.bashrc | grep -c devfiles ) -gt 0 ) ]]
 then
 	echo "Aliases have already been installed. Skipping..."
 else
