@@ -419,21 +419,21 @@ else
 		lastVersion=$(ls .tempdir/ | grep 20 --color=never | tail -n 1)
 		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | tail -n 1)
 		
-		printf "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
+		echo "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
 		read dl_latest_scm_answer
 		if [ "$dl_latest_scm_answer" = "y" ] || [ "$dl_latest_scm_answer" = "Y" ]
 		then
 			release=$lastVersion
 			build=$lastBuild
 		else
-			printf "Release Versions\n"
-			printf "================\n"
+			echo "Release Versions"
+			echo "================"
 			ls .tempdir/ | grep 20 --color=never
 			printf "Enter the release version [$lastVersion]: "
 			read release
 			release=${release:-$lastVersion}
-			printf "Build Numbers\n"
-			printf "=============\n"
+			echo "Build Numbers"
+			echo "============="
 			y=0
 			list=$(ls .tempdir/2014.1.0 | grep build --color=never)
 			for x in $list
@@ -501,15 +501,15 @@ else
 			build="Build_$lastBuild"
 		else
 		
-			printf "Release Versions\n"
-			printf "================\n"
+			echo "Release Versions"
+			echo "================"
 			ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7-
 			printf "Enter the release version [$lastVersion]: "
 			read nRelease
 			nRelease=${release:-$lastVersion}
 			release="TTPro_$nRelease"
-			printf "Build Numbers\n"
-			printf "=============\n"
+			echo "Build Numbers"
+			echo "============="
 			ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 31-
 			echo "$lastBuild"
 			printf "Enter the build number [$lastBuild]: "
