@@ -416,10 +416,10 @@ else
 		export password=""
 		
 		#Determine the latest version/build
-		lastVersion=$(ls .tempdir/ | grep 20 --color=never | cut -b 7- | tail -n 1)
+		lastVersion=$(ls .tempdir/ | grep 20 --color=never | tail -n 1)
 		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | tail -n 1)
 		
-		printf "Do you want to download the latest version($lastVersion build $lastBuild)? [y/n]: "
+		printf "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
 		read dl_latest_scm_answer
 		if [ "$dl_latest_scm_answer" = "y" ] || [ "$dl_latest_scm_answer" = "Y" ]
 		then
@@ -428,7 +428,7 @@ else
 		else
 			printf "Release Versions\n"
 			printf "================\n"
-			ls .tempdir/ | grep 20 --color=never | cut -b 7-
+			ls .tempdir/ | grep 20 --color=never
 			printf "Enter the release version [2014.1.0]: "
 			read release
 			release=${release:-2014.1.0}
