@@ -429,9 +429,9 @@ else
 			printf "Release Versions\n"
 			printf "================\n"
 			ls .tempdir/ | grep 20 --color=never
-			printf "Enter the release version [2014.1.0]: "
+			printf "Enter the release version [$lastVersion]: "
 			read release
-			release=${release:-2014.1.0}
+			release=${release:-$lastVersion}
 			printf "Build Numbers\n"
 			printf "=============\n"
 			y=0
