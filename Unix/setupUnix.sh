@@ -449,15 +449,16 @@ else
 		fi
 		echo ""
 		echo "Downloading Surround SCM $release $build"
-		mkdir /home/seapine/Desktop/$build >> /dev/null
-		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/seapine/Desktop/$build
+		mkdir /home/seapine/Desktop/Surround >> /dev/null
+		mkdir /home/seapine/Desktop/Surround/$build >> /dev/null
+		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/seapine/Desktop/Surround/$build
 		umount .tempdir
 		rmdir .tempdir
 		echo "Extracting sscmlinuxinstall.tar.gz"
-		tar -xf /home/seapine/Desktop/$build/sscmlinuxinstall.tar.gz -C /home/seapine/Desktop/$build
-		chown seapine /home/seapine/Desktop/$build
-		chgrp seapine /home/seapine/Desktop/$build
-		echo "SCM install directory: /home/seapine/Desktop/$build"
+		tar -xf /home/seapine/Desktop/Surround/$build/sscmlinuxinstall.tar.gz -C /home/seapine/Desktop/Surround/$build
+		chown seapine /home/seapine/Desktop/Surround/$build
+		chgrp seapine /home/seapine/Desktop/Surround/$build
+		echo "SCM install directory: /home/seapine/Desktop/Surround/$build"
 	fi
 
 	#Download TestTrack
