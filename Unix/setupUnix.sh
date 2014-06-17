@@ -526,6 +526,8 @@ else
 				else
 					build="Build_$buildnum"
 				fi
+			else
+				build="Build_$buildnum"
 			fi
 		fi
 		filename="ttlinuxinstall_$build.tar.gz"
