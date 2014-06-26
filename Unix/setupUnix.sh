@@ -533,6 +533,7 @@ else
 		filename="ttlinuxinstall_$build.tar.gz"
 		echo ""
 		echo "Downloading TestTrack $nRelease $build"
+		mkdir /home/seapine/Desktop/TestTrack >> /dev/null
 		mkdir /home/seapine/Desktop/TestTrack/$build >> /dev/null
 		if [[ ("$buildnum" = "$lastBuild") ]]
 		then
