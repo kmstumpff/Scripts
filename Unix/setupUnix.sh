@@ -405,6 +405,7 @@ else
 		fi
 		printf "Enter password for $username: "
 		read -s password
+		echo ""
 		mkdir .tempdir >> /dev/null
 		if [[ ("$distro" = "Fedora") ]]
 		then
@@ -474,6 +475,7 @@ else
 		fi
 		printf "Enter password for $username: "
 		read -s password
+		echo ""
 		mkdir .tempdir >> /dev/null
 		if [[ ("$distro" = "Fedora") ]]
 		then
