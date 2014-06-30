@@ -70,8 +70,9 @@ then
    fi
 fi
 
-echo "Please enter this computer's username"
+echo "Please enter this computer's username [seapine]]"
 read c_username
+c_username=${c_username:-seapine}
 
 echo "Please enter your seapine username"
 read username
@@ -439,7 +440,7 @@ else
 			echo "Build Numbers"
 			echo "============="
 			y=0
-			list=$(ls .tempdir/2014.1.0 | grep build --color=never)
+			list=$(ls .tempdir/$release | grep build --color=never)
 			for x in $list
 			do
 				echo $x
