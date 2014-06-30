@@ -70,7 +70,10 @@ then
    fi
 fi
 
-echo "Please enter your username"
+echo "Please enter this computer's username"
+read c_username
+
+echo "Please enter your seapine username"
 read username
 
 osname=$(uname -s)
@@ -195,7 +198,7 @@ else
 	fi
 fi
 
-if [[ ( $( cat /etc/bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /home/seapine/.bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /root/.bashrc | grep -c devfiles ) -gt 0 ) ]]
+if [[ ( $( cat /etc/bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /home/$c_username/.bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /root/.bashrc | grep -c devfiles ) -gt 0 ) ]]
 then
 	echo "Aliases have already been installed. Skipping..."
 else
@@ -211,24 +214,24 @@ else
 				cp /etc/skel/.bash* /root/
 			fi
 			
-			#need to add aliases to .bashrc in both seapine and root home directories
+			#need to add aliases to .bashrc in both $c_username and root home directories
 			
-			#/home/seapine/.bashrc
-			echo "alias la='ls -lAh'" >> /home/seapine/.bashrc
-			echo "alias ll='ls -lh'" >> /home/seapine/.bashrc
-			echo "alias cd..='cd ..'"  >> /home/seapine/.bashrc
-			echo "alias clr='clear'"  >> /home/seapine/.bashrc
-			echo "alias sstart='surroundscm start'"  >> /home/seapine/.bashrc
-			echo "alias sstop='surroundscm stop'"  >> /home/seapine/.bashrc
-			echo "alias lstart='spls start'"  >> /home/seapine/.bashrc
-			echo "alias lstop='spls stop'"  >> /home/seapine/.bashrc
-			echo "alias spstart='spls start;surroundscm start'" >> /home/seapine/.bashrc
-			echo "alias spstop='spls stop;surroundscm stop'" >> /home/seapine/.bashrc
-			echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /home/seapine/.bashrc
-			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
-			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/seapine/.bashrc
-			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/seapine/.bashrc
-			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/seapine/.bashrc
+			#/home/$c_username/.bashrc
+			echo "alias la='ls -lAh'" >> /home/$c_username/.bashrc
+			echo "alias ll='ls -lh'" >> /home/$c_username/.bashrc
+			echo "alias cd..='cd ..'"  >> /home/$c_username/.bashrc
+			echo "alias clr='clear'"  >> /home/$c_username/.bashrc
+			echo "alias sstart='surroundscm start'"  >> /home/$c_username/.bashrc
+			echo "alias sstop='surroundscm stop'"  >> /home/$c_username/.bashrc
+			echo "alias lstart='spls start'"  >> /home/$c_username/.bashrc
+			echo "alias lstop='spls stop'"  >> /home/$c_username/.bashrc
+			echo "alias spstart='spls start;surroundscm start'" >> /home/$c_username/.bashrc
+			echo "alias spstop='spls stop;surroundscm stop'" >> /home/$c_username/.bashrc
+			echo "alias sprestart='surroundscm stop;spls stop;sleep 10;spls start;surroundscm start'" >> /home/$c_username/.bashrc
+			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
+			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
+			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
+			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/$c_username/.bashrc
 			
 			#/root/.bashrc
 			echo "alias la='ls -lAh'" >> /root/.bashrc
@@ -284,19 +287,19 @@ then
 	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
 	then
 		echo "Installing Homebrew"
-		sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+		sudo -u $c_username ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 		printf "Did homebrew install correctly? [y/n]: "
 		read answer
 		if [ "$answer" = "n" ] || [ "$answer" = "N" ]
 		then
 			printf "Make sure Xcode stuff installs correctly then hit any key to try again: "
 			read -s -n 1
-			sudo -u seapine ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+			sudo -u $c_username ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 		fi
-		sudo -u seapine brew doctor
-		sudo -u seapine brew update
-		sudo -u seapine brew install wget
-		sudo -u seapine brew install emacs
+		sudo -u $c_username brew doctor
+		sudo -u $c_username brew update
+		sudo -u $c_username brew install wget
+		sudo -u $c_username brew install emacs
 	fi
 	
 	#Download Surround
@@ -314,16 +317,16 @@ then
 		echo ""
 		echo "Downloading Surround SCM $release $build"
 		mkdir tempdir
-		mkdir /Users/seapine/Desktop/$build
+		mkdir /Users/$c_username/Desktop/$build
 		mount_smbfs //$username@camelot/UpcomingReleases/SCM/$release/$build tempdir
 		#clear password
 		export password=""
-		cp tempdir/sscmmacosxinstall.dmg.gz /Users/seapine/Desktop/$build
+		cp tempdir/sscmmacosxinstall.dmg.gz /Users/$c_username/Desktop/$build
 		umount tempdir
 		rmdir tempdir
 		echo "Extracting sscmmacosxinstall.dgm.gz"
-		gzip -d /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg.gz
-		chown seapine:staff /Users/seapine/Desktop/$build/sscmmacosxinstall.dmg
+		gzip -d /Users/$c_username/Desktop/$build/sscmmacosxinstall.dmg.gz
+		chown $c_username:staff /Users/$c_username/Desktop/$build/sscmmacosxinstall.dmg
 	fi
 	
 	# Set up default settings
@@ -370,12 +373,12 @@ then
 		echo "Downloading graphics driver..."
 		mkdir tempdir
 		mount_smbfs //devfiles/QA/KyleS/VM_Files/MacGraphicsDriver tempdir
-		cp tempdir/VMsvga2_v1.2.5_OS_10.6-10.8.pkg /Users/seapine/Desktop
+		cp tempdir/VMsvga2_v1.2.5_OS_10.6-10.8.pkg /Users/$c_username/Desktop
 		sleep 5
 		umount tempdir
 		rmdir tempdir
 		echo "Installing graphics driver..."
-		open /Users/seapine/Desktop/VMsvga2_v1.2.5_OS_10.6-10.8.pkg
+		open /Users/$c_username/Desktop/VMsvga2_v1.2.5_OS_10.6-10.8.pkg
 	fi
 	#if user did not install driver AND installed aliases,
 	#quit Mac terminal to apply aliases
@@ -450,16 +453,16 @@ else
 		fi
 		echo ""
 		echo "Downloading Surround SCM $release $build"
-		mkdir /home/seapine/Desktop/Surround >> /dev/null
-		mkdir /home/seapine/Desktop/Surround/$build >> /dev/null
-		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/seapine/Desktop/Surround/$build
+		mkdir /home/$c_username/Desktop/Surround >> /dev/null
+		mkdir /home/$c_username/Desktop/Surround/$build >> /dev/null
+		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/$c_username/Desktop/Surround/$build
 		umount .tempdir
 		rmdir .tempdir
 		echo "Extracting sscmlinuxinstall.tar.gz"
-		tar -xf /home/seapine/Desktop/Surround/$build/sscmlinuxinstall.tar.gz -C /home/seapine/Desktop/Surround/$build
-		chown seapine /home/seapine/Desktop/Surround/$build
-		chgrp seapine /home/seapine/Desktop/Surround/$build
-		echo "SCM install directory: /home/seapine/Desktop/Surround/$build"
+		tar -xf /home/$c_username/Desktop/Surround/$build/sscmlinuxinstall.tar.gz -C /home/$c_username/Desktop/Surround/$build
+		chown $c_username /home/$c_username/Desktop/Surround/$build
+		chgrp $c_username /home/$c_username/Desktop/Surround/$build
+		echo "SCM install directory: /home/$c_username/Desktop/Surround/$build"
 	fi
 
 	#Download TestTrack
@@ -535,21 +538,21 @@ else
 		filename="ttlinuxinstall_$build.tar.gz"
 		echo ""
 		echo "Downloading TestTrack $nRelease $build"
-		mkdir /home/seapine/Desktop/TestTrack >> /dev/null
-		mkdir /home/seapine/Desktop/TestTrack/$build >> /dev/null
+		mkdir /home/$c_username/Desktop/TestTrack >> /dev/null
+		mkdir /home/$c_username/Desktop/TestTrack/$build >> /dev/null
 		if [[ ("$buildnum" = "$lastBuild") ]]
 		then
-			cp .tempdir/$release/$filename /home/seapine/Desktop/TestTrack/$build
+			cp .tempdir/$release/$filename /home/$c_username/Desktop/TestTrack/$build
 		else
-			cp .tempdir/$release/$build/$filename /home/seapine/Desktop/TestTrack/$build
+			cp .tempdir/$release/$build/$filename /home/$c_username/Desktop/TestTrack/$build
 		fi
 		umount .tempdir
 		rmdir .tempdir
 		echo "Extracting $filename"
-		tar -xf /home/seapine/Desktop/TestTrack/$build/$filename -C /home/seapine/Desktop/TestTrack/$build
-		chown seapine /home/seapine/Desktop/TestTrack/$build
-		chgrp seapine /home/seapine/Desktop/TestTrack/$build
-		echo "TT install directory: /home/seapine/Desktop/TestTrack/$build"
+		tar -xf /home/$c_username/Desktop/TestTrack/$build/$filename -C /home/$c_username/Desktop/TestTrack/$build
+		chown $c_username /home/$c_username/Desktop/TestTrack/$build
+		chgrp $c_username /home/$c_username/Desktop/TestTrack/$build
+		echo "TT install directory: /home/$c_username/Desktop/TestTrack/$build"
 	fi
 
 
