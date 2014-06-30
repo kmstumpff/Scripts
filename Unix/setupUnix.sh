@@ -70,11 +70,11 @@ then
    fi
 fi
 
-echo "Please enter this computer's username [seapine]]"
+printf "Please enter this computer's username [seapine]: "
 read c_username
 c_username=${c_username:-seapine}
 
-echo "Please enter your seapine username"
+printf "Please enter your Seapine username: "
 read username
 
 osname=$(uname -s)
