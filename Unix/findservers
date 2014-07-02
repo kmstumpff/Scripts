@@ -36,6 +36,21 @@ pidofsurroundscm() {
         return 0 
     fi
 }
+########################################################
+# function to find the pid of the surround web server
+
+pidofsurroundscmweb() {
+
+    ps -ef > /tmp/ps.tbl 2> /dev/null
+    pid=`awk -F" " '/\/sscmweb.jar/ {print $2}' /tmp/ps.tbl`
+        rm -rf /tmp/ps.tbl > /dev/null 2>&1
+    if [ "$pid" != "" ]
+    then
+        echo $pid
+        return 0
+    fi
+}
+
 
 # function to find the pid of the surround proxy server
 
@@ -72,6 +87,7 @@ pidofttstudio() {
 
 pidls=`pidofspls $1`
 pidss=`pidofsurroundscm $1`
+pidsw=`pidofsurroundscmweb $1`
 pidsp=`pidofsurroundscmproxy $1`
 pidtt=`pidofttstudio $1`
 
@@ -102,6 +118,18 @@ then
     echo "The pid of surroundscm is: $pidss"
 else
     echo "The Surround server is not running!"
+fi
+echo ""
+
+########################################################
+# Surround Web Server
+
+if [ "$pidsw" != "" ]
+then
+    echo "The Surround web server is running!"
+    echo "The pid of surroundscmweb is: $pidsp"
+else
+    echo "The Surround web server is not running!"
 fi
 echo ""
 
