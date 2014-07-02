@@ -127,7 +127,7 @@ echo ""
 if [ "$pidsw" != "" ]
 then
     echo "The Surround web server is running!"
-    echo "The pid of surroundscmweb is: $pidsp"
+    echo "The pids of surroundscmweb is: $pidsw"
 else
     echo "The Surround web server is not running!"
 fi

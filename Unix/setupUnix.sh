@@ -194,7 +194,7 @@ else
                 echo 'if [ "$pidsw" != "" ]' >> /usr/bin/fs
                 echo "then" >> /usr/bin/fs
                 echo '    echo "The Surround web server is running!"' >> /usr/bin/fs
-                echo '    echo "The pid of surroundscmweb is: $pidsw"' >> /usr/bin/fs
+                echo '    echo "The pids of surroundscmweb is: $pidsw"' >> /usr/bin/fs
                 echo "else" >> /usr/bin/fs
                 echo '    echo "The Surround web server is not running!"' >> /usr/bin/fs
                 echo "fi" >> /usr/bin/fs
