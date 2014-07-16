@@ -7,6 +7,14 @@
 # exit.
 ##################################################################
 
+# Check who the user is
+if [ $(whoami) != "root" ]
+then
+   # User is not root or using sudo...
+   echo "Script must be run as root"
+   exit 1
+fi
+
 #---------------------------
 # Display a menu
 #---------------------------
