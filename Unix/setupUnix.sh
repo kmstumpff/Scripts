@@ -69,23 +69,51 @@ then
    fi
 fi
 
-printf "Please enter this computer's username [seapine]: "
-read c_username
-c_username=${c_username:-seapine}
+while [ 0 -lt 1 ]
+do
+	if [[ -f setup.conf ]]
+	then
+		c_username=$(cat setup.conf | grep compuser | awk '{print $2;}')
+		username=$(cat setup.conf | grep spuser | awk '{print $2;}')
+		if [ "$c_username" != "" ] || [ "$username" != "" ]
+		then
+			echo "Loaded configuration file"
+			break
+		else
+			echo "Configuration file is corrupt. Deleting and trying again."
+			rm setup.conf
+		fi
+	else
+		printf "Please enter this computer's username [seapine]: "
+		read c_username
+		c_username=${c_username:-seapine}
 
-printf "Please enter your Seapine username: "
-read username
+		printf "Please enter your Seapine username: "
+		read username
+
+		echo "Saving info to setup.conf"
+		echo "compuser $c_username" > setup.conf
+		echo "spuser $username" >> setup.conf
+	fi
+done
 
 osname=$(uname -s)
+
 
 if [ "$osname" = "Linux" ]
 then
 	#Determine the distro of Linux:
-	echo "Determining the distribution you are using" 
+	printf "Determining the distribution you are using... " 
 	distro=$(head -1 /etc/issue | awk '{print $1}')
+	if [[ "$distro" != "Welcome" ]]
+	then
+		echo "This is $distro"
+	else
+		echo "This is OpenSUSE"
+	fi
 fi
 
-if [[ -f "/usr/bin/fs" ]]
+if [[ "$(cat setup.conf | grep findservers | awk '{print $2;}')" = "yes" ]]
 then
 	echo "findservers already exists. Skipping..."
 else
@@ -93,6 +121,7 @@ else
 	read fs_answer
 	if [ "$fs_answer" = "y" ] || [ "$fs_answer" = "Y" ]
 	then
+		echo "findservers yes" >> setup.conf
 		#Creates script at "/usr/bin/fs to display which Seapine servers are running"
 		touch /usr/bin/fs
 		> /usr/bin/fs
@@ -222,7 +251,7 @@ else
 	fi
 fi
 
-if [[ ( $( cat /etc/bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /home/$c_username/.bashrc | grep -c devfiles ) -gt 0 ) || ( $( cat /root/.bashrc | grep -c devfiles ) -gt 0 ) ]]
+if [[ "$(cat setup.conf | grep aliases | awk '{print $2;}')" = "yes" ]]
 then
 	echo "Aliases have already been installed. Skipping..."
 else
@@ -230,6 +259,7 @@ else
 	read al_answer
 	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
 	then
+		echo "aliases yes" >> setup.conf
 		if [[ ("$distro" = "Ubuntu") || ("$distro" = "Welcome") || ("$distro" = "Debian") ]]
 		then
 			# Add .bashrc to root's home dir
@@ -294,7 +324,7 @@ else
 		fi
 	fi
 fi
-	
+
 #########################################
 #OS X
 
