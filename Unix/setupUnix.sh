@@ -53,8 +53,7 @@
 #********************************************************************
 
 #Make sure user is root
-export user=$(whoami)
-if [ "$user" != "root" ]
+if [ $(whoami) != "root" ]
 then
    #User is not root or using sudo...
    #If script exists in the current working directory, we can relaunch with elevated privileges.
