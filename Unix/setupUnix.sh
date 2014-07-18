@@ -288,7 +288,7 @@ else
 			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
 			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
 			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
-			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users\\\\stumpffk -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
+			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
 			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/$c_username/.bashrc
 
 			#/root/.bashrc
@@ -306,7 +306,7 @@ else
 			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
 			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
 			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /root/.bashrc
-			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users\\\\stumpffk -Useapine\\\\$username'"  >> /root/.bashrc
+			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users -Useapine\\\\$username'"  >> /root/.bashrc
 			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /root/.bashrc
 
 		else
@@ -325,7 +325,7 @@ else
 			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
 			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
 			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /etc/bashrc
-			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users\\\\stumpffk -Useapine\\\\$username'"  >> /etc/bashrc
+			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users -Useapine\\\\$username'"  >> /etc/bashrc
 			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /etc/bashrc
 		fi
 	fi
