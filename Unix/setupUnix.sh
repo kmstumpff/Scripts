@@ -4,30 +4,30 @@
 # Description:
 #	This script was built to setup new testing environments
 #	with basic tools and files needed to get going.
-# 
+#
 # Functions:
 # 	1.  Install the findserver script to /usr/bin/fs
 # 		This script was made to tell the user if the local
 # 		Seapine servers are running.
-# 	
-#	2.	Creates several aliases to make working from the 
+#
+#	2.	Creates several aliases to make working from the
 # 		Terminal easier.
-# 
+#
 # 	3.	Installs Homebrew as well as wget and emacs. ( Mac Only )
-# 
-# 	4.	Downloads the specified version of Surround SCM to 
+#
+# 	4.	Downloads the specified version of Surround SCM to
 # 		the Desktop.
-# 
+#
 #	5.	Sets up default settings ( Mac Only )
-# 
+#
 # 	6.	Installs the VMWare Graphics Driver. ( Mac Only )
-# 
-# 	7.	Runs the 32-bit library setup script if it 
+#
+# 	7.	Runs the 32-bit library setup script if it
 #		exists in the current directory ( Linux Only )
-# 
+#
 # 	8.	The terminal will be closed to apply changes
 # 		Asks only if aliases where added
-# 
+#
 # Testing:
 # 	This setup script has only been tested on
 # 		- Mac OS X 10.7 - 10.9
@@ -35,20 +35,20 @@
 # 		- CentOS 6.4
 # 		- Fedora 18 & 19
 #		- Suse 12
-# 
+#
 # Known Bugs:
 #	None.
 #
 # Fixed Bugs:
 #	Ubuntu 13.04 & Debian 6- Mounting camelot fails which prevents the script from downloading Surround to the Desktop
 #		- Installs cifs-utils and smbfs packages on Ubuntu and Debian
-# 
+#
 # Issues:
-# 	If any issues are found while using this script, 
+# 	If any issues are found while using this script,
 #	email stumpffk@seapine.com with the problem.
 # 	Please include the OS and distribution name ( Linux Only )
-# 
-# 
+#
+#
 #**********************************************************************
 #********************************************************************
 
@@ -267,9 +267,9 @@ else
 			then
 				cp /etc/skel/.bash* /root/
 			fi
-			
+
 			#need to add aliases to .bashrc in both $c_username and root home directories
-			
+
 			#/home/$c_username/.bashrc
 			echo "alias la='ls -lAh'" >> /home/$c_username/.bashrc
 			echo "alias ll='ls -lh'" >> /home/$c_username/.bashrc
@@ -285,8 +285,9 @@ else
 			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
 			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
 			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
+			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users\\\\stumpffk -Useapine\\\\$username'"  >> /home/$c_username/.bashrc
 			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /home/$c_username/.bashrc
-			
+
 			#/root/.bashrc
 			echo "alias la='ls -lAh'" >> /root/.bashrc
 			echo "alias ll='ls -lh'" >> /root/.bashrc
@@ -302,8 +303,9 @@ else
 			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
 			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /root/.bashrc
 			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /root/.bashrc
+			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users\\\\stumpffk -Useapine\\\\$username'"  >> /root/.bashrc
 			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /root/.bashrc
-			
+
 		else
 			#appending aliases to "/etc/bashrc"
 			echo "alias la='ls -lAh'" >> /etc/bashrc
@@ -320,7 +322,8 @@ else
 			echo "alias devfiles='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
 			echo "alias qa='smbclient \\\\\\\\devfiles\\\\QA -Useapine\\\\$username'"  >> /etc/bashrc
 			echo "alias camelot='smbclient \\\\\\\\camelot\\\\UpcomingReleases -Useapine\\\\$username'"  >> /etc/bashrc
-		  echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /etc/bashrc
+			echo "alias dellcoop2='smbclient \\\\\\\\DELLCOOP2\\\\Users\\\\stumpffk -Useapine\\\\$username'"  >> /etc/bashrc
+			echo "alias pgadmin='/usr/local/pgsql/scripts/launchpgadmin.sh'" >> /etc/bashrc
 		fi
 	fi
 fi
@@ -333,8 +336,8 @@ then
 	#simulate Linux commands on Mac OSX
 	echo "alias lsadmin='/Applications/Seapine\ License\ Server/Seapine\ License\ Server\ Admin\ Utility.app/Contents/MacOS/Seapine\ License\ Server\ Admin'" >> /etc/bashrc
 	echo "alias scmgui='/Applications/Surround\ SCM/Surround\ SCM\ Client.app/Contents/MacOS/Surround\ SCM'" >> /etc/bashrc
-	
-	
+
+
 	#Install Homebrew and a few cli programs
 	printf "Do you want to install homebrew? [y/n]: "
 	read answer
@@ -355,7 +358,7 @@ then
 		sudo -u $c_username brew install wget
 		sudo -u $c_username brew install emacs
 	fi
-	
+
 	#Download Surround
 	printf "Do you want to download Surround to the Desktop? [y/n]: "
 	read answer
@@ -382,7 +385,7 @@ then
 		gzip -d /Users/$c_username/Desktop/$build/sscmmacosxinstall.dmg.gz
 		chown $c_username:staff /Users/$c_username/Desktop/$build/sscmmacosxinstall.dmg
 	fi
-	
+
 	# Set up default settings
 	printf "Do you want to change default settings for Finder and Dock? [y/n]: "
 	read defaults_answer
@@ -418,7 +421,7 @@ then
 		defaults write com.apple.terminal "Default Window Settings" -string "Homebrew"
 		defaults write com.apple.terminal "Startup Window Settings" -string "Homebrew"
     fi
-	
+
 	#Installing VMWare Graphics Driver
 	printf "Do you want to install the VMWare graphics driver? [y/n]: "
 	read answer
@@ -445,7 +448,7 @@ then
 			killall Terminal
 		fi
 	fi
-	
+
 #########################################
 #Linux
 else
@@ -472,11 +475,11 @@ else
 		fi
 		#clear password
 		export password=""
-		
+
 		#Determine the latest version/build
 		lastVersion=$(ls .tempdir/ | grep 20 --color=never | tail -n 1)
 		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | tail -n 1)
-		
+
 		echo "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
 		read dl_latest_scm_answer
 		if [ "$dl_latest_scm_answer" = "y" ] || [ "$dl_latest_scm_answer" = "Y" ]
@@ -542,7 +545,7 @@ else
 		fi
 		#clear password
 		export password=""
-		
+
 		#Determine the latest version/build
 		lastVersion=$(ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7- | tail -n 1)
 		list=$(ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 31-)
@@ -552,7 +555,7 @@ else
 			y=$(($y+1))
 		done
 		lastBuild=$(($y+1))
-		
+
 		printf "Do you want to download the latest version($lastVersion build $lastBuild)? [y/n]: "
 		read dl_latest_tt_answer
 		if [ "$dl_latest_tt_answer" = "y" ] || [ "$dl_latest_tt_answer" = "Y" ]
@@ -561,7 +564,7 @@ else
 			buildnum=$lastBuild		#Used for cp function below
 			build="Build_$lastBuild"
 		else
-		
+
 			echo "Release Versions"
 			echo "================"
 			ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7-
