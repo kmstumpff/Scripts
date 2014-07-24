@@ -480,8 +480,8 @@ else
 		export password=""
 
 		#Determine the latest version/build
-		lastVersion=$(ls .tempdir/ | grep 20 --color=never | tail -n 1)
-		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | tail -n 1)
+		lastVersion=$(ls .tempdir/ | grep 20 --color=never | sort -V | tail -n 1)
+		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | sort -V | tail -n 1)
 
 		echo "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
 		read dl_latest_scm_answer
