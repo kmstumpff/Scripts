@@ -9,14 +9,16 @@
 #Make sure user is root
 export user=$(whoami)
 if [ "$user" != "root" ]
-then	
+then
 	echo "Script must be run as root"
 	exit 1
-fi 
+fi
 
 
 #Stop all Seapine servers first
 surroundscm stop
+surroundproxy stop
+surroundscmweb stop
 ttstudio stop
 spls stop
 
