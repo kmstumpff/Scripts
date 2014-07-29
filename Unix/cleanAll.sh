@@ -17,7 +17,7 @@ fi
 
 #Stop all Seapine servers first
 surroundscm stop
-surroundproxy stop
+surroundscmproxy stop
 surroundscmweb stop
 ttstudio stop
 spls stop
@@ -29,24 +29,33 @@ rm -vf /etc/init.d/surroundscm
 rm -vf /etc/spscm.conf
 rm -vf /usr/bin/surroundscm
 rm -vf /usr/bin/surroundscmproxy
+rm -vf /usr/bin/surroundscmweb
 rm -vf /usr/bin/scmgui
 rm -vf /usr/bin/scmproxyserver
 rm -vf /usr/bin/scmserver
 rm -vf /etc/init.d/surroundscmproxy
 rm -vf /etc/init.d/surroundscm
+rm -rf /etc/init.d/surroundscmweb
 rm -vf /etc/init.d/rc0.d/*surroundscm
+rm -vf /etc/init.d/rc0.d/*surroundscmweb
 rm -vf /etc/init.d/rc0.d/*surroundscmproxy
 rm -vf /etc/init.d/rc1.d/*surroundscm
+rm -vf /etc/init.d/rc1.d/*surroundscmweb
 rm -vf /etc/init.d/rc1.d/*surroundscmproxy
 rm -vf /etc/init.d/rc2.d/*surroundscm
+rm -vf /etc/init.d/rc2.d/*surroundscmweb
 rm -vf /etc/init.d/rc2.d/*surroundscmproxy
 rm -vf /etc/init.d/rc3.d/*surroundscm
+rm -vf /etc/init.d/rc3.d/*surroundscmweb
 rm -vf /etc/init.d/rc3.d/*surroundscmproxy
 rm -vf /etc/init.d/rc4.d/*surroundscm
+rm -vf /etc/init.d/rc4.d/*surroundscmweb
 rm -vf /etc/init.d/rc4.d/*surroundscmproxy
 rm -vf /etc/init.d/rc5.d/*surroundscm
+rm -vf /etc/init.d/rc5.d/*surroundscmweb
 rm -vf /etc/init.d/rc5.d/*surroundscmproxy
 rm -vf /etc/init.d/rc6.d/*surroundscm
+rm -vf /etc/init.d/rc6.d/*surroundscmweb
 rm -vf /etc/init.d/rc6.d/*surroundscmproxy
 #Now remove the TestTrack stuff
 rm -rvf /var/lib/TestTrack
