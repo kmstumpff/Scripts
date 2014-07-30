@@ -615,21 +615,6 @@ else
 		echo "TT install directory: /home/$c_username/Desktop/TestTrack/$build"
 	fi
 
-
-	# Only ask if setup1.6.sh exists
-	setup="setup1.6.sh"
-	if [ -f $setup ]
-	then
-		echo ""
-		echo "***** setup1.6.sh is now obsolete. *****"
-		printf "Do you still want to run setup1.6.sh? [n]: "
-		read ans_setup
-		ans_setup=${ans_setup:-n}
-		if [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
-		then
-			bash $setup
-		fi
-	fi
 	# If aliases were added and the setup script was ran,
 	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ] || [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
 	then
