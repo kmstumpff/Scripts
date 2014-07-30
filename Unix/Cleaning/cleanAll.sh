@@ -61,8 +61,6 @@ spls stop >> /dev/null
 echo "Already stopped"
 }
 fi
-
-#wait $(jobs -p)
 echo "All servers are stopped"
 
 #Remove Surround stuff first
