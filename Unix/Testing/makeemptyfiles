@@ -1,0 +1,37 @@
+#!/bin/sh
+
+###
+# This Script is used to create a large number of empty files
+# Asks user for the directory name and the number of files to create
+# then creates a directory containing the files
+###
+
+#Asks user for the name of the directory
+echo "Please enter the name of the directory that the files will be stored in: "
+read dirname
+
+#Ask user for number of files.
+echo "Enter number of empty text files to create: "
+read fnum
+
+#create directory if it is not present
+if [ ! -d "$dirname" ]
+then
+	echo "Directory does not exist, creating directory"
+	mkdir $dirname
+fi
+
+#change working directory
+cd $dirname
+
+echo "Creating $fnum files in $dirname directory..."
+
+#Create the specified number of files
+for (( i = 1 ; i <= $fnum ; i++ ))
+do
+	touch $i.txt
+done
+
+#return
+cd ..
+echo "Finished!"

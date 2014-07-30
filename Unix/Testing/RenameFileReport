@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+LOGFILE=RenameFileTest.txt
+
+echo "The trigger description is: "$SSCM_TRIGGERDESC >> $LOGFILE
+echo "The triggering event should be rename file: "$SSCM_EVENT >> $LOGFILE
+echo "This should indicate a post trigger: "$SSCM_BEFOREAFTER >> $LOGFILE
+echo "This should be today's date: "$SSCM_DATE >> $LOGFILE
+echo "This should be the time that the trigger fired: "$SSCM_TIME >> $LOGFILE
+echo "Current user is administrator?: "$SSCM_USER >> $LOGFILE
+echo "IP address of the client (current IP address): "$SSCM_CLIENTIP >> $LOGFILE
+echo "Current client machine name: "$SSCM_CLIENTMACHINE >> $LOGFILE
+echo "The mainline that the event occurred in: "$SSCM_MAINLINE >> $LOGFILE
+echo "The branch that the event occurred in: "$SSCM_BRANCH >> $LOGFILE
+echo "The type of branch that the event occurred in: "$SSCM_BRANCHTYPE >> $LOGFILE
+echo "The file that was updated was: "$SSCM_FILE >> $LOGFILE
+echo "The commment should have been 'This is a comment': "$SSCM_COMMENT >> $LOGFILE
+echo "The file's original name before the rename was: "$SSCM_OLDFILENAME >> $LOGFILE
