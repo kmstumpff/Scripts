@@ -52,7 +52,7 @@
 #**********************************************************************
 #********************************************************************
 
-configFile="setup.conf"
+configFile="mysetup.conf"
 
 #Make sure user is root
 if [ $(whoami) != "root" ]
@@ -483,7 +483,7 @@ else
 		lastVersion=$(ls .tempdir/ | grep 20 --color=never | sort -V | tail -n 1)
 		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | sort -V | tail -n 1)
 
-		echo "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
+		printf "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
 		read dl_latest_scm_answer
 		if [ "$dl_latest_scm_answer" = "y" ] || [ "$dl_latest_scm_answer" = "Y" ]
 		then
