@@ -16,11 +16,54 @@ fi
 
 
 #Stop all Seapine servers first
-surroundscm stop
-surroundscmproxy stop
-surroundscmweb stop
-ttstudio stop
-spls stop
+if [ -f '/usr/bin/surroundscm' ]
+then
+echo "Stopping SCM server"
+{
+surroundscm stop >> /dev/null
+} || {
+echo "Already stopped"
+}
+fi
+if [ -f '/usr/bin/surroundscmproxy' ]
+then
+echo "Stopping SCM proxy server"
+{
+surroundscmproxy stop >> /dev/null
+} || {
+echo "Already stopped"
+}
+fi
+if [ -f '/usr/bin/surroundscmweb' ]
+then
+echo "Stopping SCM web server"
+{
+surroundscmweb stop >> /dev/null
+} || {
+echo "Already stopped"
+}
+fi
+if [ -f '/usr/bin/ttstudio' ]
+then
+echo "Stopping TestTrack server"
+{
+ttstudio stop >> /dev/null
+} || {
+echo "Already stopped"
+}
+fi
+if [ -f '/usr/bin/spls' ]
+then
+echo "Stopping license server"
+{
+spls stop >> /dev/null
+} || {
+echo "Already stopped"
+}
+fi
+
+#wait $(jobs -p)
+echo "All servers are stopped"
 
 #Remove Surround stuff first
 rm -rvf /var/lib/SurroundSCM/
