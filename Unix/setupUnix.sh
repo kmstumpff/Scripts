@@ -108,11 +108,22 @@ then
 	#Determine the distro of Linux:
 	printf "Determining the distribution you are using... " 
 	distro=$(head -1 /etc/issue | awk '{print $1}')
-	if [[ "$distro" != "Welcome" ]]
+	if [[ "$distro" == "Welcome" ]]
 	then
-		echo "This is $distro"
-	else
 		echo "This is OpenSUSE"
+	else
+		echo "This is $distro"
+	fi
+fi
+
+# In Fedora, this script must be run as the root user, not with sudo command. 
+if [[ "$distro" == "Fedora" ]]
+then
+	userDir=$(echo ~)
+	if [[ "$userDir" == "/home/$username" ]]
+	then
+		echo "Script must be run as root user, not sudo"
+		exit 1
 	fi
 fi
 
@@ -499,7 +510,7 @@ else
 			echo "Build Numbers"
 			echo "============="
 			y=0
-			list=$(ls .tempdir/$release | grep build --color=never)
+			list=$(ls .tempdir/$release | grep build --color=never | sort -V)
 			for x in $list
 			do
 				echo $x
