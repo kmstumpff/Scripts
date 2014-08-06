@@ -625,20 +625,10 @@ else
 	fi
 
 	# If aliases were added and the setup script was ran,
-	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ] || [ "$ans_setup" = "y" ] || [ "$ans_setup" = "Y" ]
+	if [ "$al_answer" = "y" ] || [ "$al_answer" = "Y" ]
 	then
 		#quit Linux terminal to apply aliases
-		printf "Are you sure you want to close all open terminal windows? [y/n]: "
-		read answer
-		if [ "$answer" = "y" ] || [ "$answer" = "Y" ]
-		then
-			if [ "$distro" = "Fedora" ]
-			then
-				killall Konsole
-			else
-				killall gnome-terminal
-			fi
-		fi
+		echo "Be sure to close terminal windows in order to use aliases"
 	fi
 echo "Finished!"
 fi
