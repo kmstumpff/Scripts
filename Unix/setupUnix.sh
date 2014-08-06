@@ -167,19 +167,19 @@ else
 		echo "    fi" >> /usr/bin/fs
 		echo "}" >> /usr/bin/fs
 		echo "   " >> /usr/bin/fs
-                echo "#function to find the pid of the surround web server" >> /usr/bin/fs
-                echo "pidofsurroundscmweb() {" >> /usr/bin/fs
-                echo "" >> /usr/bin/fs
-                echo "    ps -ef > /tmp/ps.tbl 2> /dev/null" >> /usr/bin/fs
-                echo "    pid=\`awk -F"\" "\" '/\/sscmweb.jar/ {print \$2}' /tmp/ps.tbl\`" >> /usr/bin/fs
-                echo "  rm -rf /tmp/ps.tbl > /dev/null 2>&1" >> /usr/bin/fs
-                echo '    if [ "$pid" != "" ]' >> /usr/bin/fs
-                echo "    then " >> /usr/bin/fs
-                echo '        echo $pid' >> /usr/bin/fs
-                echo "        return 0 " >> /usr/bin/fs
-                echo "    fi" >> /usr/bin/fs
-                echo "}" >> /usr/bin/fs
-                echo "   " >> /usr/bin/fs
+		echo "#function to find the pid of the surround web server" >> /usr/bin/fs
+		echo "pidofsurroundscmweb() {" >> /usr/bin/fs
+		echo "" >> /usr/bin/fs
+		echo "    ps -ef > /tmp/ps.tbl 2> /dev/null" >> /usr/bin/fs
+		echo "    pid=\`awk -F"\" "\" '/\/sscmweb.jar/ {print \$2}' /tmp/ps.tbl\`" >> /usr/bin/fs
+		echo "  rm -rf /tmp/ps.tbl > /dev/null 2>&1" >> /usr/bin/fs
+		echo '    if [ "$pid" != "" ]' >> /usr/bin/fs
+		echo "    then " >> /usr/bin/fs
+		echo '        echo $pid' >> /usr/bin/fs
+		echo "        return 0 " >> /usr/bin/fs
+		echo "    fi" >> /usr/bin/fs
+		echo "}" >> /usr/bin/fs
+		echo "   " >> /usr/bin/fs
 		echo "#function to find the pid of the surround proxy server" >> /usr/bin/fs
 		echo "pidofsurroundscmproxy() {" >> /usr/bin/fs
 		echo "" >> /usr/bin/fs
@@ -207,7 +207,7 @@ else
 		echo "}" >> /usr/bin/fs
 		echo 'pidls=`pidofspls $1`' >> /usr/bin/fs
 		echo 'pidss=`pidofsurroundscm $1`' >> /usr/bin/fs
-                echo 'pidsw=`pidofsurroundscmweb $1`' >> /usr/bin/fs
+		echo 'pidsw=`pidofsurroundscmweb $1`' >> /usr/bin/fs
 		echo 'pidsp=`pidofsurroundscmproxy $1`' >> /usr/bin/fs
 		echo 'pidtt=`pidofttstudio $1`' >> /usr/bin/fs
 		echo "" >> /usr/bin/fs
@@ -233,16 +233,16 @@ else
 		echo "" >> /usr/bin/fs
 		echo 'echo ""' >> /usr/bin/fs
 		echo "" >> /usr/bin/fs
-                echo 'if [ "$pidsw" != "" ]' >> /usr/bin/fs
-                echo "then" >> /usr/bin/fs
-                echo '    echo "The Surround web server is running!"' >> /usr/bin/fs
-                echo '    echo "The pids of surroundscmweb is: $pidsw"' >> /usr/bin/fs
-                echo "else" >> /usr/bin/fs
-                echo '    echo "The Surround web server is not running!"' >> /usr/bin/fs
-                echo "fi" >> /usr/bin/fs
-                echo "" >> /usr/bin/fs
-                echo 'echo ""' >> /usr/bin/fs
-                echo "" >> /usr/bin/fs
+		echo 'if [ "$pidsw" != "" ]' >> /usr/bin/fs
+		echo "then" >> /usr/bin/fs
+		echo '    echo "The Surround web server is running!"' >> /usr/bin/fs
+		echo '    echo "The pids of surroundscmweb is: $pidsw"' >> /usr/bin/fs
+		echo "else" >> /usr/bin/fs
+		echo '    echo "The Surround web server is not running!"' >> /usr/bin/fs
+		echo "fi" >> /usr/bin/fs
+		echo "" >> /usr/bin/fs
+		echo 'echo ""' >> /usr/bin/fs
+		echo "" >> /usr/bin/fs
 		echo 'if [ "$pidsp" != "" ]' >> /usr/bin/fs
 		echo "then" >> /usr/bin/fs
 		echo '    echo "The Surround proxy server is running!"' >> /usr/bin/fs
@@ -474,7 +474,6 @@ else
 		# We must have smbfs installed in order to mount camelot
 		if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
 		then
-			apt-get install smbfs -y >> /dev/null
 			apt-get install cifs-utils -y >> /dev/null
 		fi
 		printf "Enter password for $username: "
@@ -544,7 +543,6 @@ else
 		# We must have smbfs installed in order to mount camelot
 		if [[ ("$distro" = "Ubuntu") || ("$distro" = "Debian") ]]
 		then
-			apt-get install smbfs -y >> /dev/null
 			apt-get install cifs-utils -y >> /dev/null
 		fi
 		printf "Enter password for $username: "
