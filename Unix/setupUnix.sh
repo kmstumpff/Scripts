@@ -483,7 +483,6 @@ else
 		then
 			echo "unmounting devfiles from previously fail job"
 			umount .tempdir
-	                rmdir .tempdir
 		else
 			mkdir .tempdir >> /dev/null
 		fi
@@ -530,16 +529,12 @@ else
 		fi
 		echo ""
 		echo "Downloading Surround SCM $release $build"
-		if [[ -d /home/$c_username/Desktop/Surround ]]
+		if [[ ! -d /home/$c_username/Desktop/Surround ]]
 		then
-			echo "/home/$c_username/Desktop/Surround directory exists"
-		else
 			mkdir /home/$c_username/Desktop/Surround >> /dev/null
 		fi
-		if [[ -d /home/$c_username/Desktop/Surround/$build ]]
+		if [[ ! -d /home/$c_username/Desktop/Surround/$build ]]
                 then
-                        echo "/home/$c_username/Desktop/Surround/$build directory exists"
-                else
 			mkdir /home/$c_username/Desktop/Surround/$build >> /dev/null
 		fi
 		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/$c_username/Desktop/Surround/$build
@@ -569,7 +564,6 @@ else
                 then
                         echo "unmounting devfiles from previously fail job"
                         umount .tempdir
-                        rmdir .tempdir
                 else
                         mkdir .tempdir >> /dev/null
                 fi
@@ -631,16 +625,12 @@ else
 		filename="ttlinuxinstall_$build.tar.gz"
 		echo ""
 		echo "Downloading TestTrack $nRelease $build"
-		if [[ -d /home/$c_username/Desktop/TestTrack ]]
+		if [[ ! -d /home/$c_username/Desktop/TestTrack ]]
                 then
-                        echo "/home/$c_username/Desktop/TestTrack directory exists"
-                else
                         mkdir /home/$c_username/Desktop/TestTrack >> /dev/null
                 fi
-                if [[ -d /home/$c_username/Desktop/TestTrack/$build ]]
+                if [[ ! -d /home/$c_username/Desktop/TestTrack/$build ]]
                 then
-                        echo "/home/$c_username/Desktop/TestTrack/$build directory exists"
-                else
                         mkdir /home/$c_username/Desktop/TestTrack/$build >> /dev/null
                 fi
 		if [[ ("$buildnum" = "$lastBuild") ]]
