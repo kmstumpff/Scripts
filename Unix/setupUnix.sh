@@ -479,7 +479,14 @@ else
 		printf "Enter password for $username: "
 		read -s password
 		echo ""
-		mkdir .tempdir >> /dev/null
+		if [[ -d .tempdir ]]
+		then
+			echo "unmounting devfiles from previously fail job"
+			umount .tempdir
+	                rmdir .tempdir
+		else
+			mkdir .tempdir >> /dev/null
+		fi
 		if [[ ("$distro" = "Fedora") ]]
 		then
 			su -c 'mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
@@ -523,8 +530,18 @@ else
 		fi
 		echo ""
 		echo "Downloading Surround SCM $release $build"
-		mkdir /home/$c_username/Desktop/Surround >> /dev/null
-		mkdir /home/$c_username/Desktop/Surround/$build >> /dev/null
+		if [[ -d /home/$c_username/Desktop/Surround ]]
+		then
+			echo "/home/$c_username/Desktop/Surround directory exists"
+		else
+			mkdir /home/$c_username/Desktop/Surround >> /dev/null
+		fi
+		if [[ -d /home/$c_username/Desktop/Surround/$build ]]
+                then
+                        echo "/home/$c_username/Desktop/Surround/$build directory exists"
+                else
+			mkdir /home/$c_username/Desktop/Surround/$build >> /dev/null
+		fi
 		cp .tempdir/$release/$build/sscmlinuxinstall.tar.gz /home/$c_username/Desktop/Surround/$build
 		umount .tempdir
 		rmdir .tempdir
@@ -548,7 +565,14 @@ else
 		printf "Enter password for $username: "
 		read -s password
 		echo ""
-		mkdir .tempdir >> /dev/null
+		if [[ -d .tempdir ]]
+                then
+                        echo "unmounting devfiles from previously fail job"
+                        umount .tempdir
+                        rmdir .tempdir
+                else
+                        mkdir .tempdir >> /dev/null
+                fi
 		if [[ ("$distro" = "Fedora") ]]
 		then
 			su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
@@ -607,8 +631,18 @@ else
 		filename="ttlinuxinstall_$build.tar.gz"
 		echo ""
 		echo "Downloading TestTrack $nRelease $build"
-		mkdir /home/$c_username/Desktop/TestTrack >> /dev/null
-		mkdir /home/$c_username/Desktop/TestTrack/$build >> /dev/null
+		if [[ -d /home/$c_username/Desktop/TestTrack ]]
+                then
+                        echo "/home/$c_username/Desktop/TestTrack directory exists"
+                else
+                        mkdir /home/$c_username/Desktop/TestTrack >> /dev/null
+                fi
+                if [[ -d /home/$c_username/Desktop/TestTrack/$build ]]
+                then
+                        echo "/home/$c_username/Desktop/TestTrack/$build directory exists"
+                else
+                        mkdir /home/$c_username/Desktop/TestTrack/$build >> /dev/null
+                fi
 		if [[ ("$buildnum" = "$lastBuild") ]]
 		then
 			cp .tempdir/$release/$filename /home/$c_username/Desktop/TestTrack/$build
