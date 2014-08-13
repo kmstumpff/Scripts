@@ -486,9 +486,15 @@ else
 		else
 			mkdir .tempdir >> /dev/null
 		fi
-		if [[ ("$distro" = "Fedora") ]]
+		if [[ "$distro" = "Fedora" ]]
 		then
-			su -c 'mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+			# Fedora 20 does not need root privileges
+			if [[ "$(head -1 /etc/issue | awk '{print $3}')" = "20" ]]
+			then
+				mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+			else
+				su -c 'mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+			fi
 		else
 			mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
 		fi
@@ -569,7 +575,13 @@ else
                 fi
 		if [[ ("$distro" = "Fedora") ]]
 		then
-			su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+			# Fedora 20 does not need root privileges
+                        if [[ "$(head -1 /etc/issue | awk '{print $3}')" = "20" ]]
+                        then
+                            	mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+                        else
+                            	su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+                        fi
 		else
 			mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
 		fi
