@@ -53,6 +53,7 @@
 #********************************************************************
 
 configFile="mysetup.conf"
+camelotTimeout=2
 
 #Make sure user is root
 if [ $(whoami) != "root" ]
@@ -476,9 +477,6 @@ else
 		then
 			apt-get install cifs-utils -y >> /dev/null
 		fi
-		printf "Enter password for $username: "
-		read -s password
-		echo ""
 		if [[ -d .tempdir ]]
 		then
 			echo "unmounting devfiles from previously fail job"
@@ -486,21 +484,39 @@ else
 		else
 			mkdir .tempdir >> /dev/null
 		fi
-		if [[ "$distro" = "Fedora" ]]
-		then
-			# Fedora 20 does not need root privileges
-			if [[ "$(head -1 /etc/issue | awk '{print $3}')" = "20" ]]
+		cameletTries=0
+		while [[ $camelotTries -lt $camelotTimeout ]]
+		do
+			camelotTries=$(($camelotTries + 1))
+			printf "Enter password for $username: "
+			read -s password
+			echo ""
+			if [[ "$distro" = "Fedora" ]]
 			then
-				mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+				# Fedora 20 does not need root privileges
+				if [[ "$(head -1 /etc/issue | awk '{print $3}')" = "20" ]]
+				then
+					mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+				else
+					su -c 'mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+				fi
 			else
-				su -c 'mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+				mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
 			fi
-		else
-			mount -t cifs //camelot/UpcomingReleases/SCM .tempdir/ -o username=$username,domain=SEAPINE,password=$password
-		fi
-		#clear password
-		export password=""
-
+			#clear password
+			export password=""
+			if [[ "$(mount | grep -i camelot | awk '{print $1}')" = "//camelot/UpcomingReleases/SCM" ]] # Is camelot mounted?
+			then
+				break
+			elif [[ $camelotTries -eq $camelotTimeout ]]
+			then
+				echo "Max number of tries reached. Quitting..."
+				rmdir .tempdir >> /dev/null
+				exit 1
+			else
+				echo "There was an error mounting camelot. Trying again."
+			fi			
+		done
 		#Determine the latest version/build
 		lastVersion=$(ls .tempdir/ | grep 20 --color=never | sort -V | tail -n 1)
 		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | sort -V | tail -n 1)
@@ -563,9 +579,6 @@ else
 		then
 			apt-get install cifs-utils -y >> /dev/null
 		fi
-		printf "Enter password for $username: "
-		read -s password
-		echo ""
 		if [[ -d .tempdir ]]
                 then
                         echo "unmounting devfiles from previously fail job"
@@ -573,21 +586,39 @@ else
                 else
                         mkdir .tempdir >> /dev/null
                 fi
-		if [[ ("$distro" = "Fedora") ]]
-		then
-			# Fedora 20 does not need root privileges
-                        if [[ "$(head -1 /etc/issue | awk '{print $3}')" = "20" ]]
-                        then
-                            	mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
-                        else
-                            	su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
-                        fi
-		else
-			mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
-		fi
-		#clear password
-		export password=""
-
+		cameletTries=0
+		while [[ $camelotTries -lt $camelotTimeout ]]
+		do
+			camelotTries=$(($camelotTries + 1))
+			printf "Enter password for $username: "
+			read -s password
+			echo ""
+			if [[ ("$distro" = "Fedora") ]]
+			then
+				# Fedora 20 does not need root privileges
+		                if [[ "$(head -1 /etc/issue | awk '{print $3}')" = "20" ]]
+		                then
+		                    	mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+		                else
+		                    	su -c 'mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password'
+		                fi
+			else
+				mount -t cifs //camelot/UpcomingReleases/TestTrack/ .tempdir/ -o username=$username,domain=SEAPINE,password=$password
+			fi
+			#clear password
+			export password=""
+			if [[ "$(mount | grep -i camelot | awk '{print $1}')" = "//camelot/UpcomingReleases/TestTrack" ]] # Is camelot mounted?
+			then
+				break
+			elif [[ $camelotTries -eq $camelotTimeout ]]
+			then
+				echo "Max number of tries reached. Quitting..."
+				rmdir .tempdir >> /dev/null
+				exit 1
+			else
+				echo "There was an error mounting camelot. Trying again."
+			fi
+		done
 		#Determine the latest version/build
 		lastVersion=$(ls .tempdir/ | grep TTPro_20 --color=never | cut -b 7- | tail -n 1)
 		list=$(ls -d .tempdir/TTPro_2014.1.0/Build_?? | grep Build --color=never | cut -b 31-)
