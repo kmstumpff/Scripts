@@ -515,10 +515,10 @@ else
 				exit 1
 			else
 				echo "There was an error mounting camelot. Trying again."
-			fi			
+			fi
 		done
 		#Determine the latest version/build
-		lastVersion=$(ls .tempdir/ | grep 20 --color=never | sort -V | tail -n 1)
+		lastVersion=$(ls .tempdir/ | grep "20.*\..*\..*" --color=never | sort -V | tail -n 1)
 		lastBuild=$(ls .tempdir/2014.1.0 | grep build --color=never | sort -V | tail -n 1)
 
 		printf "Do you want to download the latest version($lastVersion  $lastBuild)? [y/n]: "
@@ -530,7 +530,7 @@ else
 		else
 			echo "Release Versions"
 			echo "================"
-			ls .tempdir/ | grep 20 --color=never
+			ls .tempdir/ | grep "20.*\..*\..*" --color=never
 			printf "Enter the release version [$lastVersion]: "
 			read release
 			release=${release:-$lastVersion}
